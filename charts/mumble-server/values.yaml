@@ -24,7 +24,7 @@ persistence:
     type: secret
     identifier: config
     globalMounts:
-      - path: /etc/mumble/config.ini
+      - path: /data/config.ini
         readOnly: true
         subPath: murmur.ini
   data:
@@ -170,7 +170,7 @@ controllers:
         image: {}
         env:
           - name: MUMBLE_CUSTOM_CONFIG_FILE
-            value: /etc/mumble/config.ini
+            value: /data/config.ini
         securityContext:
           capabilities:
             drop:
