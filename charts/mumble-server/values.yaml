@@ -115,8 +115,8 @@ config: |
   ;registerHostname=
   ;registerLocation=
   ;bonjour=true
-  ;sslCert=
-  ;sslKey=
+  sslCert=/data/cert.pem
+  sslKey=/data/key.pem
   ;sslPassPhrase=
   ;sslCA=
   ;sslDHParams=@ffdhe2048
