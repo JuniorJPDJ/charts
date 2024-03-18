@@ -9,7 +9,7 @@
   "prHourlyLimit": 0,
   "packageRules": [
     {
-      "matchFileNames": ["^charts/*/**"],
+      "matchFileNames": ["charts/*/**"],
       "additionalBranchPrefix": "{{parentDir}}-",
       "semanticCommitScope": "{{parentDir}}"
     }
