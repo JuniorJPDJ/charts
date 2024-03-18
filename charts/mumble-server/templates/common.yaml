@@ -1,11 +1,5 @@
 {{/* Preprocess values and prepare config file */}}
 {{- define "mumble.preprocess" -}}
-secrets:
-  config:
-    stringData:
-      murmur.ini: |
-        {{- tpl .Values.config .Values.configVars | nindent 8 }}
-
 controllers:
   main:
     containers:
@@ -16,6 +10,14 @@ controllers:
 persistence:
   cert:
     name: {{ $.Release.Name }}-cert
+    enabled: {{ .Values.certificate.enabled }}
+
+secrets:
+  config:
+    stringData:
+      murmur.ini: |
+        {{- tpl .Values.config (merge .Values.configVars (dict "certEnabled" .Values.certificate.enabled)) | nindent 8 }}
+
 {{- end -}}
 {{- $_ := merge .Values (include "mumble.preprocess" . | fromYaml) -}}
 
