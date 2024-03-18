@@ -1,0 +1,26 @@
+apiVersion: v2
+name: mumble-server
+description:  Mumble is an open-source, low-latency, high quality voice chat software.
+type: application
+version: 0.1.0
+appVersion: v1.4.287
+kubeVersion: ">=1.22.0-0"
+keywords:
+  - mumble
+  - mumble-server
+  - murmur
+  - audio
+  - gaming
+  - voip
+  - voicechat
+  - quality-voice-chat
+dependencies:
+  - name: common
+    repository: https://bjw-s.github.io/helm-charts
+    version: 3.0.4
+sources:
+  - https://github.com/mumble-voip/mumble
+annotations:
+  artifacthub.io/links: |-
+    - name: App Source
+      url: https://github.com/mumble-voip/mumble

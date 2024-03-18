@@ -1,0 +1,19 @@
+{{/* Preprocess values and prepare config file */}}
+{{- define "mumble.preprocess" -}}
+secrets:
+  config:
+    stringData:
+      murmur.ini: |
+        {{- tpl .Values.config .Values.configVars | nindent 8 }}
+
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          {{- toYaml .Values.image | nindent 10 }}
+{{- end -}}
+{{- $_ := merge .Values (include "mumble.preprocess" . | fromYaml) -}}
+
+{{/* Render the templates */}}
+{{- include "bjw-s.common.loader.all" . }}
