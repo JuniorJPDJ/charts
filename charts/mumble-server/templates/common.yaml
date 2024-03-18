@@ -12,6 +12,10 @@ controllers:
       main:
         image:
           {{- toYaml .Values.image | nindent 10 }}
+
+persistence:
+  cert:
+    name: {{ $.Release.Name }}-cert
 {{- end -}}
 {{- $_ := merge .Values (include "mumble.preprocess" . | fromYaml) -}}
 
