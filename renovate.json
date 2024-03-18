@@ -1,6 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:best-practices",
+    ":semanticCommits",
+    ":semanticCommitScopeDisabled",
+    "docker:enableMajor"
+  ],
+  "prHourlyLimit": 0,
+  "packageRules": [
+    {
+      "matchFileNames": ["^charts/*/**"],
+      "additionalBranchPrefix": "{{parentDir}}-",
+      "semanticCommitScope": "{{parentDir}}"
+    }
   ]
 }
