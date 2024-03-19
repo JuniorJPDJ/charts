@@ -11,7 +11,7 @@ replicas: 1
 image:
   repository: ghcr.io/juniorjpdj/mumbledj
   pullPolicy: Always
-  tag: latest
+  tag: latest@sha256:8c19c1731f8af9680dc6419a245bcad542a141a8ba87f0f17ca37a9a482eca62
 
 
 config:
@@ -151,7 +151,7 @@ controllers:
         image:
           repository: ghcr.io/juniorjpdj/containers/openssl-kubectl
           pullPolicy: Always
-          tag: latest
+          tag: latest@sha256:340f740ec47fe60ae02a9bc73e5a40977dee86d1ea9f1c923f2fc5df63cba175
         command:
           - /usr/local/bin/cert-gen.sh
         env:
