@@ -1,0 +1,40 @@
+{{- include "bjw-s.common.loader.init" . }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "bjw-s.common.lib.chart.names.fullname" . }}
+  labels:
+    app.kubernetes.io/component: signingkey-job
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    resourceNames:
+      - {{ include "bjw-s.common.lib.chart.names.fullname" . }}-secret
+    verbs:
+      - get
+      - update
+      - patch
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "bjw-s.common.lib.chart.names.fullname" . }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "bjw-s.common.lib.chart.names.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "bjw-s.common.lib.chart.names.fullname" . }}
+---
