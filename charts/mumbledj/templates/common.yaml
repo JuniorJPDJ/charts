@@ -1,0 +1,21 @@
+{{/* Preprocess values and prepare config file */}}
+{{- define "mumbledj.preprocess" -}}
+controllers:
+  main:
+    replicas: {{ .Values.replicas }}
+    containers:
+      main:
+        image:
+          {{- toYaml .Values.image | nindent 10 }}
+
+secrets:
+  secret:
+    stringData:
+      config.yaml: |
+        {{- toYaml .Values.config | nindent 8 }}
+
+{{- end -}}
+{{- $_ := merge .Values (include "mumbledj.preprocess" . | fromYaml) -}}
+
+{{/* Render the templates */}}
+{{- include "bjw-s.common.loader.all" . }}

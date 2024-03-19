@@ -1,0 +1,191 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
+#
+
+replicas: 1
+
+
+image:
+  repository: ghcr.io/juniorjpdj/mumbledj
+  pullPolicy: Always
+  tag: latest
+
+
+config:
+  # For configuration description and available values check here:
+  # https://github.com/JuniorJPDJ/mumbledj/blob/master/assets/config.yaml.example
+  api_keys:
+      youtube: ""
+      soundcloud: ""
+  defaults:
+      comment: Hello! I am a bot. Type !help for a list of commands.
+      channel: ""
+      player_command: ffmpeg
+  queue:
+      track_skip_ratio: 0.5
+      playlist_skip_ratio: 0.5
+      max_track_duration: 0
+      max_tracks_per_playlist: 50
+      automatic_shuffle_on: false
+      announce_new_tracks: true
+  search:
+      service: YouTube
+  connection:
+      address: mumble
+      port: "64738"
+      password: ""
+      # If you scale your bot to more than one, number will be added at the end
+      username: MumbleDJ
+      # This will be overwritten
+      user_p12: /home/mumbledj/.config/mumbledj/cert.p12
+      insecure: false
+      cert: ""
+      key: ""
+      access_tokens: ""
+      retry_enabled: true
+      retry_attempts: 10
+      retry_interval: 5
+  cache:
+      enabled: true
+      maximum_size: 512
+      expire_time: 24
+      check_interval: 5
+      directory: /home/mumbledj/.cache/mumbledj
+  volume:
+      default: 0.2
+      lowest: 0.01
+      highest: 0.8
+  admins:
+      enabled: true
+      names:
+          - "SuperUser"
+
+
+defaultPodOptions:
+  automountServiceAccountToken: false
+  securityContext:
+    fsGroup: 101
+    fsGroupChangePolicy: Always
+
+
+persistence:
+  cache:
+    type: emptyDir
+    globalMounts:
+      - path: /home/mumbledj/.cache/mumbledj
+        readOnly: false
+    sizeLimit: 600Mi
+  tmp:
+    type: emptyDir
+    globalMounts:
+      - path: /tmp
+        readOnly: false
+    sizeLimit: 100Mi
+  config:
+    type: secret
+    identifier: secret
+    globalMounts:
+      - path: /home/mumbledj/.config/mumbledj/
+        readOnly: true
+  scripts:
+    type: configMap
+    identifier: scripts
+    defaultMode: 0555
+    advancedMounts:
+      cert-hook-job:
+        main:
+          - path: /usr/local/bin
+            readOnly: true
+
+
+controllers:
+  main:
+    type: statefulset
+    containers:
+      main:
+        # replicas: <templated from `replica` value>
+        # image: <templated from `image` section>
+        env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: USERNAME
+            value: "{{ .Values.config.connection.username }}"
+        command:
+          - ash
+          - "-c"
+          - >-
+            suffix=$([ "${POD_NAME##*-}" != "0" ] && echo ${POD_NAME##*-} ) ;
+            exec /usr/local/bin/mumbledj
+            --username "$USERNAME$suffix"
+            --p12 "/home/mumbledj/.config/mumbledj/cert$suffix.p12"
+            $@
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 100
+          runAsGroup: 101
+  cert-hook-job:
+    annotations:
+      helm.sh/hook: post-install,post-upgrade
+      helm.sh/hook-delete-policy: before-hook-creation
+      argocd.argoproj.io/hook: Sync
+      argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    type: job
+    job:
+      parallelism: 1
+      completions: 1
+      backoffLimit: 1
+    pod:
+      automountServiceAccountToken: true
+      enableServiceLinks: true
+    containers:
+      main:
+        image:
+          repository: ghcr.io/juniorjpdj/containers/openssl-kubectl
+          pullPolicy: Always
+          tag: latest
+        command:
+          - /usr/local/bin/cert-gen.sh
+        env:
+          - name: REPLICAS
+            value: "{{ .Values.replicas }}"
+          - name: SECRET_NAME
+            value: '{{ include "bjw-s.common.lib.chart.names.fullname" . }}-secret'
+
+
+serviceAccount:
+  create: true
+
+
+configMaps:
+  scripts:
+    data:
+      cert-gen.sh: |-
+        #!/bin/ash
+        
+        cd /tmp
+        i=""
+        while
+          [ ! -e "/home/mumbledj/.config/mumbledj/cert$i.p12" ] && {
+            echo "Generating certificate: cert$i.pem"
+            openssl req -x509 -nodes -newkey rsa:2048 -keyout cert$i.pem -out cert$i.pem -days 3650 -subj "/CN=MumbleDJ$i"
+
+            echo "Converting certificate: cert$i.pem -> cert$i.p12"
+            openssl pkcs12 -export -passout pass:"" -out cert$i.p12 -inkey cert$i.pem -in cert$i.pem
+
+            echo "Putting certificate in Kubernetes Secret: cert$i.p12 -> $SECRET_NAME/cert$i.p12"
+            kubectl patch secret "$SECRET_NAME" -p '{"data":
+              {"cert'"$i"'.p12": "'"$(base64 -w 0 cert$i.p12)"'"}
+            }'
+          }
+          i=$((i+1))
+          [ $i -lt $REPLICAS ]
+        do : ; done
