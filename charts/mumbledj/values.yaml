@@ -61,7 +61,7 @@ config:
   admins:
       enabled: true
       names:
-          - "SuperUser"
+        - SuperUser
 
 
 defaultPodOptions:
@@ -156,7 +156,7 @@ controllers:
           - /usr/local/bin/cert-gen.sh
         env:
           - name: REPLICAS
-            value: "{{ .Values.replicas }}"
+            value: '{{ .Values.replicas }}'
           - name: SECRET_NAME
             value: '{{ include "bjw-s.common.lib.chart.names.fullname" . }}-secret'
 
