@@ -1,0 +1,13 @@
+{{/* Preprocess values and prepare config file */}}
+{{- define "mumble.preprocess" -}}
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          {{- toYaml .Values.image | nindent 10 }}
+{{- end -}}
+{{- $_ := merge .Values (include "mumble.preprocess" . | fromYaml) -}}
+
+{{/* Render the templates */}}
+{{- include "bjw-s.common.loader.all" . }}
