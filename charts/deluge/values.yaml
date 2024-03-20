@@ -30,8 +30,8 @@ persistence:
 
 defaultPodOptions:
   securityContext:
-    fsGroup: 1000
-    fsGroupChangePolicy: Always
+    #fsGroup: 1000
+    #fsGroupChangePolicy: Always
 
 controllers:
   main:
@@ -45,9 +45,9 @@ controllers:
             drop:
               - ALL
           readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 1000
-          runAsGroup: 1000
+          #runAsNonRoot: true
+          #runAsUser: 1000
+          #runAsGroup: 1000
 
 service:
   main:
