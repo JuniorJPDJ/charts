@@ -30,8 +30,8 @@ persistence:
 
 defaultPodOptions:
   securityContext:
-    #fsGroup: 1000
-    #fsGroupChangePolicy: Always
+    fsGroup: 101
+    fsGroupChangePolicy: Always
 
 controllers:
   main:
@@ -40,16 +40,25 @@ controllers:
       main:
         # templated from main values `images` section
         image: {}
+        command:
+          - sh
+          - '-c'
+          - >-
+            if [ ! -d "/config/plugins" ]; then
+            cp -r /usr/share/deluge/plugins /config/plugins ;
+            else
+            rm -f /config/plugins/ltConfig-*.egg ;
+            cp /usr/share/deluge/plugins/ltConfig-*.egg /config/plugins ;
+            fi ;
+            run_deluge.sh
         securityContext:
           capabilities:
             drop:
               - ALL
-            add:
-              - CAP_CHOWN
-          #readOnlyRootFilesystem: true
-          #runAsNonRoot: true
-          #runAsUser: 1000
-          #runAsGroup: 1000
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 101
+          runAsGroup: 101
 
 service:
   main:
@@ -67,8 +76,8 @@ service:
     controller: main
     ports:
       tcp:
-        port: 51416
+        port: 53160
         protocol: UDP
       udp:
-        port: 51416
+        port: 53160
         procotol: TCP
