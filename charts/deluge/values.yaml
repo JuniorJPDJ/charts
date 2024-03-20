@@ -8,7 +8,7 @@
 image: 
   repository: divadsn/deluge-ltconfig
   pullPolicy: Always
-  tag: latest
+  tag: latest@sha256:eabbf47cf796f3178a10578b6463bcf84fa67fe73716c0e6416cf17b57889363
 
 persistence:
   config:
