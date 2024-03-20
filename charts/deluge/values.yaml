@@ -44,6 +44,8 @@ controllers:
           capabilities:
             drop:
               - ALL
+            add:
+              - CAP_CHOWN
           #readOnlyRootFilesystem: true
           #runAsNonRoot: true
           #runAsUser: 1000
