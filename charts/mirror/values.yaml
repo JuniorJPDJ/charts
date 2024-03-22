@@ -1,0 +1,164 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
+#
+
+syncJobs:
+  archlinux:
+    enabled: false
+    # defaults to the value below, supported: sync-repo, rsync
+    # type: sync-repo
+    source: 'rsync://ftp.halifax.rwth-aachen.de/archlinux'
+    # only needed for sync-repo type
+    lastUpdateUrl: 'http://ftp.halifax.rwth-aachen.de/archlinux/lastupdate'
+    size: 200Gi
+    # storageClass:
+    # defaults to the value below
+    # schedule: '* * * * *'
+  archlinuxarm:
+    enabled: false
+    type: rsync
+    source: rsync://de3.mirror.archlinuxarm.org/archlinux-arm
+    # defaults to the value below
+    # rsyncArgs: ['-rtlvH', '--delete-after', '--delay-updates', '--safe-links']
+    size: 200Gi
+    schedule: '50 * * * *'
+
+service:
+  http:
+    type: ClusterIP
+    controller: webserver
+    ports:
+      http:
+        port: 8080
+        protocol: HTTP
+  rsync:
+    type: ClusterIP
+    controller: rsyncd
+    ports:
+      rsync:
+        port: 873
+        protocol: TCP
+
+ingress:
+  main:
+    enabled: false
+    hosts: []
+    # - host: mirror.example.com
+    #  paths:
+    #     - path: /
+    #       service:
+    #         identifier: http
+    #         port: http
+    tls: []
+    # - secretName: mirror-cert
+    #   hosts:
+    #     - mirror.example.com
+
+rsyncJobDefaults:
+  image:
+    repository: ghcr.io/juniorjpdj/containers/rsync
+    pullPolicy: Always
+    tag: latest
+
+syncrepoJobDefaults:
+  image:
+    repository: ghcr.io/juniorjpdj/containers/archlinux-syncrepo
+    pullPolicy: Always
+    tag: latest
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    retain: true
+    size: 10Gi
+    advancedMounts:
+      webserver:
+        main:
+          - path: /srv
+            readOnly: false
+      rsyncd:
+        main:
+          - path: /srv
+            readOnly: true
+  config:
+    type: configMap
+    identifier: config
+    advancedMounts:
+      webserver:
+        main:
+          - path: /etc/nginx/conf.d/default.conf
+            readOnly: true
+            subPath: nginx.conf
+            defaultMode: 0444
+      rsyncd:
+        main:
+          - path: /etc/rsyncd.conf
+            readOnly: true
+            subPath: rsyncd.conf
+            defaultMode: 0444
+  tmp:
+    type: emptyDir
+    globalMounts:
+      - path: /tmp
+        readOnly: false
+    sizeLimit: 100Mi
+
+
+defaultPodOptions:
+  securityContext:
+    fsGroup: 101
+    fsGroupChangePolicy: Always
+
+controllers:
+  webserver:
+    containers:
+      main:
+        image:
+          repository: ghcr.io/juniorjpdj/containers/nginx-rootless
+          pullPolicy: Always
+          tag: latest
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          runAsUser: 101
+          runAsGroup: 101
+  rsyncd:
+    containers:
+      main:
+        image:
+          repository: ghcr.io/juniorjpdj/containers/rsync
+          pullPolicy: Always
+          tag: latest
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 101
+          runAsGroup: 101
+        command: ['rsync', '--daemon', '--no-detach', '--log-file', '/dev/stdout']
+
+configMaps:
+  config:
+    data:
+      nginx.conf: |-
+        server {
+          listen 8080;
+          server_name _;
+
+          set_real_ip_from  172.0.1.2;
+          real_ip_header    X-Forwarded-For;
+
+          location / {  
+            root /srv;
+            autoindex on;
+          }
+        }

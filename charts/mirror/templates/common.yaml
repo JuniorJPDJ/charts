@@ -1,0 +1,91 @@
+{{/* Preprocess values and prepare config file */}}
+{{- define "mirror.preprocess" -}}
+controllers:
+{{- range $name, $v := .Values.syncJobs }}
+{{- if dig "enabled" true $v }}
+  sync-{{ $name }}:
+    type: cronjob
+    cronjob:
+      schedule: {{ default "* * * * *" $v.schedule | quote }}
+    containers:
+      main:
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 101
+          runAsGroup: 101
+        {{- if or (not $v.type) (eq $v.type "sync-repo") }}
+        {{- toYaml $.Values.syncrepoJobDefaults | nindent 8 }}
+        env:
+          - name: SOURCE_URL
+            value: {{ required "source is required" $v.source | quote }}
+          - name: LAST_UPDATE_URL
+            value: {{ required "lastUpdateUrl is required" $v.lastUpdateUrl | quote }}
+        command: [syncrepo]
+        {{- else if eq $v.type "rsync" }}
+        {{- toYaml $.Values.rsyncJobDefaults | nindent 8 }}
+        command:
+          - rsync
+          {{- default (list "-rtlvH" "--delete-after" "--delay-updates" "--safe-links") $v.rsyncArgs | toYaml | nindent 10 }}
+          - {{ required "source is required" $v.source | quote }}
+          - /var/mirror
+        {{- end }}
+{{- end }}
+{{- end }}
+
+persistence:
+{{- range $name, $v := .Values.syncJobs }}
+{{- if dig "enabled" true $v }}
+  {{ $name }}:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    {{- with $v.storageClass }}
+    storageClass: {{ . | quote }}
+    {{- end }}
+    retain: true
+    size: {{ $v.size }}
+    advancedMounts:
+      webserver:
+        main:
+          - path: /srv/{{ $name }}
+            readOnly: true
+            {{- if or (not $v.type) (eq $v.type "sync-repo") }}
+            subPath: out
+            {{- end }}
+      rsyncd:
+        main:
+          - path: /srv/{{ $name }}
+            readOnly: true
+            {{- if or (not $v.type) (eq $v.type "sync-repo") }}
+            subPath: out
+            {{- end }}
+      sync-{{ $name }}:
+        main:
+          - path: /var/mirror
+            readOnly: false
+{{- end }}
+{{- end }}
+
+configMaps:
+  config:
+    data:
+      rsyncd.conf: |-
+        [global]
+        charset = utf-8
+        max connections = 200
+        use chroot = no
+        reverse lookup = no
+{{- range $name, $v := .Values.syncJobs }}
+{{- if dig "enabled" true $v }}
+        
+        [{{ $name }}]
+        path = /srv/{{ $name }}
+        read only = yes
+{{- end }}
+{{- end }}
+
+{{- end -}}
+{{- $_ := merge .Values (include "mirror.preprocess" . | fromYaml) -}}
+
+{{/* Render the templates */}}
+{{- include "bjw-s.common.loader.all" . }}
