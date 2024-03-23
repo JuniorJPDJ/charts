@@ -67,7 +67,7 @@ service:
     ports:
       http:
         port: 8112
-        protocol: TCP
+        protocol: HTTP
       rtc:
         port: 58846
         protocol: TCP
