@@ -5,7 +5,7 @@
 # https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
 #
 
-image: 
+image:
   repository: ghcr.io/theconnman/docker-hub-rss
   pullPolicy: Always
   tag: "0.6.0@sha256:3850badd3ebdb7d6583c8b67ebbcdd077b4e4ff2d8362ee31d78e334462d616f"
