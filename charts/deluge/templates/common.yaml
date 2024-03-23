@@ -1,5 +1,5 @@
 {{/* Preprocess values and prepare config file */}}
-{{- define "mumble.preprocess" -}}
+{{- define "deluge.preprocess" -}}
 controllers:
   main:
     containers:
@@ -7,7 +7,7 @@ controllers:
         image:
           {{- toYaml .Values.image | nindent 10 }}
 {{- end -}}
-{{- $_ := merge .Values (include "mumble.preprocess" . | fromYaml) -}}
+{{- $_ := merge .Values (include "deluge.preprocess" . | fromYaml) -}}
 
 {{/* Render the templates */}}
 {{- include "bjw-s.common.loader.all" . }}
