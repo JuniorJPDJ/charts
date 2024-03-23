@@ -1,0 +1,24 @@
+apiVersion: v2
+name: archisteamfarm
+description: C# application with primary purpose of farming Steam cards from multiple accounts simultaneously.
+type: application
+version: 0.1.0
+appVersion: 6.0.1.13
+kubeVersion: ">=1.22.0-0"
+keywords:
+  - rss
+  - docker
+  - dockerhub
+dependencies:
+  - name: common
+    repository: https://bjw-s.github.io/helm-charts
+    version: 3.0.4
+sources:
+  - https://github.com/JustArchiNET/ArchiSteamFarm
+  - https://github.com/JuniorJPDJ/charts
+annotations:
+  artifacthub.io/links: |-
+    - name: App Source
+      url: https://github.com/JustArchiNET/ArchiSteamFarm
+    - name: Chart Source
+      url: https://github.com/JuniorJPDJ/charts

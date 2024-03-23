@@ -1,0 +1,102 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
+#
+
+image:
+  repository: ghcr.io/justarchinet/archisteamfarm
+  pullPolicy: Always
+  tag: "6.0.1.13@sha256:49239192c863dcb3da5b0db7e8f6a573d8668d16c7e6d2c080c05636d5b1f675"
+
+configs:
+# This allows injecting json configs from yaml values
+# Available options can be found here:
+# https://github.com/JustArchiNET/ArchiSteamFarm/wiki/Configuration
+  IPC.config:
+    Kestrel:
+      Endpoints:
+        HTTP:
+          Url: http://*:1242
+
+secretConfigs:
+# This is similar to the above section, but is stored in a Secret
+# Cool if you want to store some passwords or other sensitive values
+  ASF.json:
+    CurrentCulture: en
+    Headless: true
+    UpdateChannel: 0
+    # IPCPassword: changeme
+    # SteamOwnerID: 1337
+
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: Always
+
+controllers:
+  main:
+    type: statefulset
+    containers:
+      main:
+        # image: filled from main `image` section
+        probes:
+          liveness:
+            enabled: true
+            type: HTTP
+          readiness:
+            enabled: true
+            type: HTTP
+          startup:
+            enabled: true
+            type: HTTP
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+
+persistence:
+  data:
+    enabled: false
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    retain: true
+    globalMounts:
+      - path: /app/config
+        readOnly: false
+    size: 100Mi
+  app:
+    type: emptyDir
+    sizeLimit: 50Mi
+    globalMounts:
+      - path: /app
+        readOnly: false
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: 1242
+
+ingress:
+  main:
+    enabled: false
+    annotations: {}
+    # cert-manager.io/cluster-issuer: letsencrypt
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts: {}
+    # - host: asf.example.com
+    #   paths:
+    #     - path: /
+    #       service:
+    #         identifier: main
+    #         port: http
+    tls: {}
+    # - secretName: archisteamfarm-cert
+    #   hosts:
+    #     - asf.example.com
