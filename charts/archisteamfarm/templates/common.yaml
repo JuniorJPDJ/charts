@@ -1,0 +1,49 @@
+{{/* Preprocess values and prepare config file */}}
+{{- define "archisteamfarm.preprocess" -}}
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          {{- toYaml .Values.image | nindent 10 }}
+
+configMaps:
+  config:
+    data:
+      {{- range $name, $v := .Values.configs }}
+      {{ quote $name }}: |-
+        {{- mustToPrettyJson $v | nindent 8 }}
+      {{- end }}
+
+secrets:
+  config:
+    stringData:
+      {{- range $name, $v := .Values.secretConfigs }}
+      {{ quote $name }}: |-
+        {{- mustToPrettyJson $v | nindent 8 }}
+      {{- end }}
+
+persistence:
+  {{- range $name, $v := .Values.configs }}
+  config-{{ kebabcase $name | replace "." "-" }}: # TODO
+    type: configMap
+    identifier: config
+    globalMounts:
+      - path: {{ printf "/app/config/%s" $name | quote }}
+        readOnly: true
+        subPath: {{ quote $name }}
+  {{- end }}
+  {{- range $name, $v := .Values.secretConfigs }}
+  config-{{ kebabcase $name | replace "." "-" }}: # TODO
+    type: secret
+    identifier: config
+    globalMounts:
+      - path: {{ printf "/app/config/%s" $name | quote }}
+        readOnly: true
+        subPath: {{ quote $name }}
+  {{- end }}
+{{- end -}}
+{{- $_ := merge .Values (include "archisteamfarm.preprocess" . | fromYaml) -}}
+
+{{/* Render the templates */}}
+{{- include "bjw-s.common.loader.all" . }}
