@@ -5,7 +5,7 @@
 # https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
 #
 
-image: 
+image:
   repository: mumblevoip/mumble-server
   pullPolicy: Always
   tag: v1.4.287@sha256:dd6cbd5dc981dc0433edebd7f9aee220431d23600b9ef7109dbe24b0feae6ad1

@@ -1,6 +1,6 @@
 apiVersion: v2
 name: mumbledj
-description:  A Mumble bot that plays audio fetched from various media sites.
+description: A Mumble bot that plays audio fetched from various media sites.
 type: application
 version: 0.1.0
 appVersion: latest
