@@ -1,0 +1,65 @@
+{{/* Preprocess values and prepare config file */}}
+{{- define "shynet.preprocess" -}}
+
+{{- $domains := list }}
+{{- range .Values.ingress.main.hosts }}
+{{- $domains = append $domains .host }}
+{{- end }}
+{{- $domains := default .Values.domains $domains }}
+
+{{- $origins := list }}
+{{- range $domains }}
+{{- $origins = concat $origins (list (printf "http://%s" .) (printf "https://%s" .)) }}
+{{- end }}
+
+{{- $domain := first $domains -}}
+
+configMaps:
+  envs:
+    data:
+      PORT: "8080"
+      ALLOWED_HOSTS: {{ join "," $domains | quote }}
+      CSRF_TRUSTED_ORIGINS: {{ join "," $origins | quote }}
+
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          {{- toYaml .Values.image | nindent 10 }}
+        probes:
+          liveness:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                httpHeaders:
+                  - name: Host
+                    value: {{ quote $domain }}
+                port: 8080
+                path: /healthz/?format=json
+          readiness:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                httpHeaders:
+                  - name: Host
+                    value: {{ quote $domain }}
+                port: 8080
+                path: /healthz/?format=json
+          startup:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                httpHeaders:
+                  - name: Host
+                    value: {{ quote $domain }}
+                port: 8080
+                path: /healthz/?format=json
+{{- end }}
+{{- $_ := merge .Values (include "shynet.preprocess" . | fromYaml) }}
+
+{{/* Render the templates */}}
+{{- include "bjw-s.common.loader.all" . -}}
