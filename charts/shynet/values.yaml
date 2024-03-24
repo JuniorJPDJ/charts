@@ -1,0 +1,88 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
+#
+
+# not needed if using ingress
+# used to setup ALLOWED_HOSTS and CSRF_TRUSTED_ORIGINS
+domains:
+  - shynet.example.com
+
+image:
+  repository: milesmcc/shynet
+  pullPolicy: Always
+  tag: "v0.13.1@sha256:ba54f7797a6bd8bcdbe6906aeed3d55e5c62e9de00aedd1d2a6b3cd8e4c17379"
+
+configMaps:
+  envs:
+    enabled: true
+    data:
+      DB_NAME: shynet
+      DB_USER: shynet
+      # DB_HOST:
+      # EMAIL_HOST: mail.example.com
+      EMAIL_PORT: "587"
+      EMAIL_USE_TLS: "True"
+      # SERVER_EMAIL: "Shynet <shynet@example.com>"
+      ACCOUNT_SIGNUPS_ENABLED: "False"
+      ACCOUNT_EMAIL_VERIFICATION: "none"
+      # TIME_ZONE: "Europe/Warsaw"
+      SCRIPT_USE_HTTPS: "False"
+      SCRIPT_HEARTBEAT_FREQUENCY: "5000"
+      SESSION_MEMORY_TIMEOUT: "1800"
+      ONLY_SUPERUSERS_CREATE: "False"
+      PERFORM_CHECKS_AND_SETUP: "True"
+      SHOW_SHYNET_VERSION: "True"
+      SHOW_THIRD_PARTY_ICONS: "True"
+      BLOCK_ALL_IPS: "False"
+      AGGRESSIVE_HASH_SALTING: "True"
+      LOCATION_URL: "https://www.openstreetmap.org/?mlat=$LATITUDE&mlon=$LONGITUDE"
+      DASHBOARD_PAGE_SIZE: "20"
+      USE_RELATIVE_MAX_IN_BAR_VISUALIZATION: "True"
+
+secrets:
+  envs:
+    enabled: true
+    stringData:
+      # DB_PASSWORD: changeme
+      # EMAIL_HOST_USER: shynet@example.com
+      # EMAIL_HOST_PASSWORD: changeme
+      # Generate using https://stackoverflow.com/questions/41298963/is-there-a-function-for-generating-settings-secret-key-in-django
+      # DJANGO_SECRET_KEY: generateme
+
+controllers:
+  main:
+    strategy: RollingUpdate
+    containers:
+      main:
+        # image: filled from main `image` section
+        envFrom:
+          - configMap: envs
+          - secret: envs
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: 8080
+
+ingress:
+  main:
+    enabled: false
+    annotations: {}
+    # cert-manager.io/cluster-issuer: letsencrypt
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts: []
+    #- host: shynet.example.com
+    #    paths:
+    #      - path: /
+    #        service:
+    #          identifier: main
+    #          port: http
+    tls: []
+    # - secretName: shynet-cert
+    #   hosts:
+    #     - shynet.example.com

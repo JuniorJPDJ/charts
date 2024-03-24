@@ -1,0 +1,27 @@
+apiVersion: v2
+name: shynet
+description: Modern, privacy-friendly, and detailed web analytics that works without cookies or JS
+type: application
+version: 0.1.0
+appVersion: 0.13.1
+kubeVersion: ">=1.22.0-0"
+keywords:
+  - shynet
+  - security
+  - privacy
+  - monitoring
+  - analytics
+  - web-analytics
+dependencies:
+  - name: common
+    repository: https://bjw-s.github.io/helm-charts
+    version: 3.0.4
+sources:
+  - https://github.com/milesmcc/shynet
+  - https://github.com/JuniorJPDJ/charts
+annotations:
+  artifacthub.io/links: |-
+    - name: App Source
+      url: https://github.com/milesmcc/shynet
+    - name: Chart Source
+      url: https://github.com/JuniorJPDJ/charts
