@@ -75,6 +75,7 @@ configMaps:
         max connections = 200
         use chroot = no
         reverse lookup = no
+        lock file = /tmp/rsyncd.lock
 {{- range $name, $v := .Values.syncJobs }}
 {{- if dig "enabled" true $v }}
         
