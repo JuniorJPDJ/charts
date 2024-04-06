@@ -11,12 +11,16 @@
   "bumpVersion": "patch",
   "packageRules": [
     {
-      "matchFileNames": ["charts/*/**"],
+      "matchFileNames": [
+        "charts/*/**"
+      ],
       "additionalBranchPrefix": "{{parentDir}}-",
       "semanticCommitScope": "{{parentDir}}"
     },
     {
-      "matchManagers": ["regex"],
+      "matchManagers": [
+        "custom.regex"
+      ],
       "pinDigests": false
     }
   ]
