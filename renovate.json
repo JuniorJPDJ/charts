@@ -7,6 +7,7 @@
     "docker:enableMajor"
   ],
   "prHourlyLimit": 0,
+  "bumpVersion": "patch",
   "packageRules": [
     {
       "matchFileNames": ["charts/*/**"],
