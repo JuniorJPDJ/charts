@@ -3,6 +3,7 @@ name: shynet
 description: Modern, privacy-friendly, and detailed web analytics that works without cookies or JS
 type: application
 version: 0.1.0
+# renovate: image=milesmcc/shynet
 appVersion: 0.13.1
 kubeVersion: ">=1.22.0-0"
 keywords:
