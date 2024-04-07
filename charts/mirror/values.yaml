@@ -61,7 +61,7 @@ rsyncJobDefaults:
   image:
     repository: ghcr.io/juniorjpdj/containers/rsync
     pullPolicy: Always
-    tag: 3.2.7-r1@sha256:967e20cf5036ccf3f3693f4b6b8eef2cf5e12a2c8d50e15d00fabecd2bfabd48
+    tag: 3.2.7-r4@sha256:c563b81a468da5d4bb01cf2a10126a571905f073857146dc05e0bb2af62fbd32
 
 syncrepoJobDefaults:
   image:
@@ -135,7 +135,7 @@ controllers:
         image:
           repository: ghcr.io/juniorjpdj/containers/rsync
           pullPolicy: Always
-          tag: 3.2.7-r1@sha256:967e20cf5036ccf3f3693f4b6b8eef2cf5e12a2c8d50e15d00fabecd2bfabd48
+          tag: 3.2.7-r4@sha256:c563b81a468da5d4bb01cf2a10126a571905f073857146dc05e0bb2af62fbd32
         securityContext:
           capabilities:
             drop:
