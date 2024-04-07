@@ -22,6 +22,7 @@
       "description": "Use correct versioning scheme for my containers",
       "matchDatasources": ["docker"],
       "matchPackagePrefixes": ["ghcr.io/juniorjpdj/containers/"],
+      "allowedVersions": "/^[\\d.]+-r\\d+$/",
       "versioning": "loose"
     },
     {
