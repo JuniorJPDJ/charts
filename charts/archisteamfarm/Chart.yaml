@@ -4,7 +4,7 @@ description: C# application with primary purpose of farming Steam cards from mul
 type: application
 version: 0.1.0
 # renovate: image=ghcr.io/justarchinet/archisteamfarm
-appVersion: 6.0.2.1
+appVersion: 6.0.2.0
 kubeVersion: ">=1.22.0-0"
 keywords:
   - rss
