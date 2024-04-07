@@ -22,7 +22,7 @@
       "description": "Use correct versioning scheme for my containers",
       "matchDatasources": ["docker"],
       "matchPackagePrefixes": ["ghcr.io/juniorjpdj/containers/"],
-      "versioning": "loose"
+      "versioning": "deb"
     },
     {
       "description": "Disable digest pinning for regex managers in Chart.yaml used for appVersion upgrading",
