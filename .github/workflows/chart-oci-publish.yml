@@ -81,7 +81,7 @@ jobs:
       - name: Generate properties
         id: props
         run: |
-          yq '.' "charts/${{ matrix.chart }}/Chart.yaml" -o shell >> "$GITHUB_OUTPUT"
+          yq 'omit(["annotations"])' "charts/${{ matrix.chart }}/Chart.yaml" -o shell >> "$GITHUB_OUTPUT"
 
       - name: Generate tag
         id: meta
