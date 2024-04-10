@@ -82,28 +82,18 @@ jobs:
         id: props
         run: |
           yq 'omit(["annotations"])' "charts/${{ matrix.chart }}/Chart.yaml" -o shell >> "$GITHUB_OUTPUT"
-
-      - name: Generate tag
-        id: meta
-        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
-        with:
-          tags: |
-            type=ref,event=pr,priority=2999
-            type=raw,enable={{is_default_branch}},value=${{ steps.props.outputs.version }},priority=1999
-
-      - name: Format PR tag to Chart version
-        id: ver
-        run: |
-          ver="${{ steps.meta.outputs.version }}"
-          [[ $ver == pr-* ]] && ver="0.0.0+$ver"
-          echo "version=$ver" >> "$GITHUB_OUTPUT"
+          if [[ '${{ github.event_name }}' = 'pull_request' ]] ; then
+            echo "tag=0.0.0+pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=$(yq '.version' 'charts/${{ matrix.chart }}/Chart.yaml')" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Release Helm Chart
         uses: appany/helm-oci-chart-releaser@v0.4.1
         with:
           name: ${{ matrix.chart }}
           repository: juniorjpdj/charts
-          tag: ${{ steps.ver.outputs.version }}
+          tag: ${{ steps.props.outputs.tag }}
           registry: ghcr.io
           registry_username: ${{ github.actor }}
           registry_password: ${{ secrets.GITHUB_TOKEN }}
