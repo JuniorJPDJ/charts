@@ -1,0 +1,103 @@
+name: Helm Chart build and OCI publish
+
+on:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+    types: [opened, reopened, synchronize]
+  workflow_dispatch:
+
+jobs:
+  list_charts:
+    name: List Helm Charts to build
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.MATRIX }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: '0'
+
+      - name: Generate Helm Charts list
+        id: set-matrix
+        working-directory: charts
+        run: |
+          GIT_DIFF_ENABLED=0
+
+          if [ '${{ github.event_name }}' = 'push' ] ; then
+            GIT_DIFF_ENABLED=1
+            GIT_DIFF_BASE='${{ github.event.before }}'
+            GIT_DIFF_HEAD='${{ github.event.after }}'
+          elif [ '${{ github.event_name }}' = 'pull_request' ] ; then
+            GIT_DIFF_ENABLED=1
+            GIT_DIFF_BASE='${{ github.event.pull_request.base.sha }}'
+            GIT_DIFF_HEAD='${{ github.event.pull_request.head.sha }}'
+          fi
+
+          {
+            echo "MATRIX<<9743a66f914cc249efca164485a19c5c"
+            {
+              NO_CHARTS=1
+              for d in * ; do
+                # check if directory changed and skip if not
+                [ $GIT_DIFF_ENABLED = 1 ] && \
+                  git diff -s --exit-code "${GIT_DIFF_BASE}..${GIT_DIFF_HEAD}" "$d" && \
+                  continue
+
+                if [ -f "$d/Chart.yaml" ] ; then
+                  echo "- chart: \"$d\""
+                  NO_CHARTS=0
+                fi
+
+              done
+              [ $NO_CHARTS = 1 ] && echo '[]'
+            } | yq -p yaml -o json -I 0 .
+
+            echo 9743a66f914cc249efca164485a19c5c
+          } >> "$GITHUB_OUTPUT"
+
+  build:
+    name: "Build Helm Chart: ${{ matrix.chart }}"
+    runs-on: ubuntu-latest
+    needs: list_charts
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+    if: needs.list_charts.outputs.matrix != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.list_charts.outputs.matrix) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Generate properties
+        id: props
+        run: |
+          yq '.' "charts/${{ matrix.chart }}/Chart.yaml" -o shell >> "$GITHUB_OUTPUT"
+
+      - name: Generate tag
+        id: meta
+        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
+        with:
+          tags: |
+            type=ref,event=pr,suffix=0.0.0+,priority=2999
+            type=raw,enable={{is_default_branch}},value=${{ steps.props.outputs.version }},priority=1999
+
+      - name: Release Helm Chart
+        uses: appany/helm-oci-chart-releaser@v0.4.1
+        with:
+          name: ${{ matrix.chart }}
+          repository: juniorjpdj/charts
+          tag: ${{ steps.meta.outputs.version }}
+          registry: ghcr.io
+          registry_username: ${{ github.actor }}
+          registry_password: ${{ secrets.GITHUB_TOKEN }}
+          update_dependencies: true
