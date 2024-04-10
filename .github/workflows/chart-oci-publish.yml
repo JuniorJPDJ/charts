@@ -88,7 +88,7 @@ jobs:
         uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
         with:
           tags: |
-            type=ref,event=pr,prefix=0.0.0+,priority=2999
+            type=ref,event=pr,prefix="0.0.0+",priority=2999
             type=raw,enable={{is_default_branch}},value=${{ steps.props.outputs.version }},priority=1999
 
       - name: Release Helm Chart
