@@ -1,3 +1,4 @@
+# TEST
 apiVersion: v2
 name: archisteamfarm
 description: C# application with primary purpose of farming Steam cards from multiple accounts simultaneously.
