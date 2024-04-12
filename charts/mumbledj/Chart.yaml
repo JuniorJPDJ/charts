@@ -2,7 +2,7 @@ apiVersion: v2
 name: mumbledj
 description: A Mumble bot that plays audio fetched from various media sites.
 type: application
-version: 0.1.5
+version: 0.1.6
 appVersion: latest
 kubeVersion: ">=1.22.0-0"
 keywords:
@@ -19,7 +19,10 @@ dependencies:
     version: 3.1.0
 sources:
   - https://github.com/JuniorJPDJ/mumbledj
+  - https://github.com/JuniorJPDJ/charts/tree/master/charts/mumbledj
 annotations:
   artifacthub.io/links: |-
     - name: App Source
       url: https://github.com/JuniorJPDJ/mumbledj
+    - name: Chart Source
+      url: https://github.com/JuniorJPDJ/charts/tree/master/charts/mumbledj

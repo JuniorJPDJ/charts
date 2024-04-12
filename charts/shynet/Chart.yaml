@@ -2,7 +2,7 @@ apiVersion: v2
 name: shynet
 description: Modern, privacy-friendly, and detailed web analytics that works without cookies or JS
 type: application
-version: 0.1.0
+version: 0.1.1
 # renovate: image=milesmcc/shynet
 appVersion: 0.13.1
 kubeVersion: ">=1.22.0-0"
@@ -19,10 +19,10 @@ dependencies:
     version: 3.1.0
 sources:
   - https://github.com/milesmcc/shynet
-  - https://github.com/JuniorJPDJ/charts
+  - https://github.com/JuniorJPDJ/charts/tree/master/charts/shynet
 annotations:
   artifacthub.io/links: |-
     - name: App Source
       url: https://github.com/milesmcc/shynet
     - name: Chart Source
-      url: https://github.com/JuniorJPDJ/charts
+      url: https://github.com/JuniorJPDJ/charts/tree/master/charts/shynet
