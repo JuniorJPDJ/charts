@@ -43,7 +43,7 @@ jobs:
               for d in * ; do
                 # check if directory changed and skip if not
                 [ $GIT_DIFF_ENABLED = 1 ] && \
-                  git diff -s --exit-code "${GIT_DIFF_BASE}..${GIT_DIFF_HEAD}" "$d" && \
+                  git diff -s --exit-code "${GIT_DIFF_BASE}..${GIT_DIFF_HEAD}" -- "$d" && \
                   continue
 
                 if [ -f "$d/Chart.yaml" ] ; then

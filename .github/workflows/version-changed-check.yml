@@ -1,0 +1,23 @@
+name: Check for version bumps in PR
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  check_changes_and_versions:
+    name: Check for changes and version bumps
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.MATRIX }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: '0'
+
+      - name: Verify changes and versions
+        run: |
+          GIT_DIFF_BASE='${{ github.event.pull_request.base.sha }}'
+          GIT_DIFF_HEAD='${{ github.event.pull_request.head.sha }}'
+          ./scripts/ci_version_changed_check.sh "$GIT_DIFF_BASE" "$GIT_DIFF_HEAD"
