@@ -2,7 +2,7 @@ apiVersion: v2
 name: mirror
 description: Arch Linux (or generic rsync-cloned) mirror
 type: application
-version: 0.1.3
+version: 0.1.4
 appVersion: 0.1.0
 kubeVersion: ">=1.22.0-0"
 keywords:
@@ -21,9 +21,18 @@ dependencies:
 sources:
   - https://github.com/JuniorJPDJ/containers/tree/master/containers/nginx-rootless
   - https://github.com/JuniorJPDJ/containers/tree/master/containers/rsync
+  - https://github.com/JuniorJPDJ/containers/tree/master/containers/archlinux-syncrepo
+  - https://gitlab.archlinux.org/archlinux/infrastructure/-/blob/master/roles/syncrepo/files/syncrepo-template.sh
+  - https://github.com/JuniorJPDJ/charts/tree/master/charts/mirror
 annotations:
   artifacthub.io/links: |-
-    - name: nginx-rootless container source
+    - name: nginx-rootless Container source
       url: https://github.com/JuniorJPDJ/containers/tree/master/containers/nginx-rootless
-    - name: rsync container source
+    - name: rsync Container source
       url: https://github.com/JuniorJPDJ/containers/tree/master/containers/rsync
+    - name: archlinux-syncrepo Container source
+      url: https://github.com/JuniorJPDJ/containers/tree/master/containers/archlinux-syncrepo
+    - name: syncrepo script source
+      url: https://gitlab.archlinux.org/archlinux/infrastructure/-/blob/master/roles/syncrepo/files/syncrepo-template.sh
+    - name: Chart Source
+      url: https://github.com/JuniorJPDJ/charts/tree/master/charts/mirror

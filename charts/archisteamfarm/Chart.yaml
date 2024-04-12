@@ -2,7 +2,7 @@ apiVersion: v2
 name: archisteamfarm
 description: C# application with primary purpose of farming Steam cards from multiple accounts simultaneously.
 type: application
-version: 0.1.1
+version: 0.1.2
 # renovate: image=ghcr.io/justarchinet/archisteamfarm
 appVersion: 6.0.2.1
 kubeVersion: ">=1.22.0-0"
@@ -16,10 +16,10 @@ dependencies:
     version: 3.1.0
 sources:
   - https://github.com/JustArchiNET/ArchiSteamFarm
-  - https://github.com/JuniorJPDJ/charts
+  - https://github.com/JuniorJPDJ/charts/tree/master/charts/archisteamfarm
 annotations:
   artifacthub.io/links: |-
     - name: App Source
       url: https://github.com/JustArchiNET/ArchiSteamFarm
     - name: Chart Source
-      url: https://github.com/JuniorJPDJ/charts
+      url: https://github.com/JuniorJPDJ/charts/tree/master/charts/archisteamfarm
