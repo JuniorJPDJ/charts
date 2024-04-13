@@ -210,6 +210,16 @@ secrets:
       # POSTGRES_USER:
       # POSTGRES_PASSWORD:
 
+configMaps:
+  config:
+    data:
+      inetrc: |
+        {lookup,["file","native"]}.
+        {host,{127,0,0,1}, ["localhost","hostalias"]}.
+        {file, resolv, "/etc/resolv.conf"}.
+      ejabberdctl.cfg: |
+        NO_TIMEOUT="--no-timeout"
+
 certificates:
   # requires working installation of cert-manager
   xmpp-example-com:
