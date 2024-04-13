@@ -286,7 +286,7 @@ controllers:
           capabilities:
             drop:
               - ALL
-          readOnlyRootFilesystem: true
+          readOnlyRootFilesystem: false
           runAsNonRoot: true
           runAsUser: 9000
           runAsGroup: 9000
