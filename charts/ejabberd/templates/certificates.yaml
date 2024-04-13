@@ -1,6 +1,6 @@
 {{- include "bjw-s.common.loader.init" . }}
 {{- range $name, $v := .Values.certificates }}
-{{- if $v.enabled }}
+{{- if dig "enabled" true $v }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
