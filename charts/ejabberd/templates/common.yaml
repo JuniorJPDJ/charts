@@ -6,6 +6,14 @@ controllers:
       main:
         image:
           {{- toYaml .Values.image | nindent 10 }}
+
+configMaps:
+  config:
+    data:
+      {{- range $name, $cfg := .Values.configs }}
+      {{ quote $name }}: |-
+        {{- toYaml $cfg | nindent 8 }}
+      {{- end }}
 {{- end -}}
 {{- $_ := merge .Values (include "ejabberd.preprocess" . | fromYaml) -}}
 
