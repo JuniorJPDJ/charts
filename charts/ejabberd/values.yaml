@@ -254,6 +254,12 @@ persistence:
     globalMounts:
       - path: /home/ejabberd/conf
         readOnly: true
+  tmp:
+    type: emptyDir
+    globalMounts:
+      - path: /tmp
+        readOnly: false
+    sizeLimit: 100Mi
 
 defaultPodOptions:
   securityContext:
