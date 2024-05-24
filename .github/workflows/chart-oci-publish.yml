@@ -89,7 +89,7 @@ jobs:
           fi
 
       - name: Release Helm Chart
-        uses: appany/helm-oci-chart-releaser@240cda338baff2e248fa235b7e7dade7bf658cd3 # v0.4.1
+        uses: appany/helm-oci-chart-releaser@dd0551c15abe174eb57824ecde62e976091094da # v0.4.2
         with:
           name: ${{ matrix.chart }}
           repository: juniorjpdj/charts
