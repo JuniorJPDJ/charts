@@ -8,7 +8,7 @@
 configs:
   ejabberd.yml:
     # This config uses envsubst internally to replace ${ENV_VAR_NAME} with environment variable values.
-    # The ${CAPTCHA_CMD} variable is always provided using entrypoint script and points to the captcha-ng.sh script/
+    # The ${CAPTCHA_CMD} variable is always provided using entrypoint script and points to the captcha-ng.sh script.
     # You can put your sensitive variables into secret below and those will be provided as env vars to the container,
     # then you can use those in your config.
     # Example config from https://github.com/processone/ejabberd/blob/master/ejabberd.yml.example
