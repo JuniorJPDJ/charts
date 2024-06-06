@@ -18,11 +18,11 @@ controllers:
           - >
             echo "Requesting certificate from {{ required "sourceDomain is required" $v.sourceDomain }}:{{ required "sourcePort is required" $v.sourcePort }}" ;
             openssl s_client -showcerts -servername "{{ $v.sourceDomain }}" -connect "{{ $v.sourceDomain }}:{{ $v.sourcePort }}" </dev/null 2>/dev/null
-            | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | tee tls.crt ;
+            | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | tee /tmp/tls.crt ;
             SECRET_NAME="{{ include "bjw-s.common.lib.chart.names.fullname" $dot }}-{{ replace "." "-" $name }}-cert";
             echo "Updating certificate in $SECRET_NAME secret";
             kubectl patch secret "$SECRET_NAME" -p '{"data":
-              {"tls.crt": "'"$(base64 -w 0 tls.crt)"'"}
+              {"tls.crt": "'"$(base64 -w 0 /tmp/tls.crt)"'"}
             }'
 {{- end }}
 {{- end }}
