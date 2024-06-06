@@ -1,0 +1,44 @@
+{{/* Preprocess values and prepare config file */}}
+{{- define "certpuller.preprocess" -}}
+{{- $dot := . }}
+controllers:
+{{- range $name, $v := .Values.domains }}
+{{- if dig "enabled" true $v }}
+  pull-{{ replace "." "-" $name }}-cert:
+    type: cronjob
+    primary: false
+    cronjob:
+      schedule: {{ required "refreshSchedule is required" $v.refreshSchedule }}
+    containers:
+      main:
+        {{- toYaml $dot.Values.containerConfig | nindent 8 }}
+        command:
+          - sh
+          - '-c'
+          - >
+            echo "Requesting certificate from {{ required "sourceDomain is required" $v.sourceDomain }}:{{ required "sourcePort is required" $v.sourcePort }}" ;
+            openssl s_client -showcerts -servername "{{ $v.sourceDomain }}" -connect "{{ $v.sourceDomain }}:{{ $v.sourcePort }}" </dev/null 2>/dev/null
+            | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | tee /tmp/tls.crt ;
+            SECRET_NAME="{{ include "bjw-s.common.lib.chart.names.fullname" $dot }}-{{ replace "." "-" $name }}-cert";
+            echo "Updating certificate in $SECRET_NAME secret";
+            kubectl patch secret "$SECRET_NAME" -p '{"data":
+              {"tls.crt": "'"$(base64 -w 0 /tmp/tls.crt)"'"}
+            }'
+{{- end }}
+{{- end }}
+
+secrets:
+{{- range $name, $v := .Values.domains }}
+{{- if dig "enabled" true $v }}
+  {{ replace "." "-" $name }}-cert:
+    stringData:
+      tls.key: |-
+        {{- required "privateKey is required" $v.privateKey | nindent 8 }}
+{{- end }}
+{{- end }}
+
+{{- end -}}
+{{- $_ := merge .Values (include "certpuller.preprocess" . | fromYaml) -}}
+
+{{/* Render the templates */}}
+{{- include "bjw-s.common.loader.all" . }}

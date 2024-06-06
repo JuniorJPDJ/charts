@@ -1,0 +1,32 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
+#
+
+domains:
+  example.com:
+    enabled: false
+    refreshSchedule: "0 2 * * *"
+    sourceDomain: src.example.com
+    sourcePort: 443
+    privateKey: |-
+      -----BEGIN RSA PRIVATE KEY-----
+      BLAHBLAHBLAH
+      -----END RSA PRIVATE KEY-----
+
+
+containerConfig:
+  securityContext:
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+  image:
+    repository: ghcr.io/juniorjpdj/containers/openssl-kubectl
+    tag: 1.30.0-r1
+    pullPolicy: Always
+
+serviceAccount:
+  create: true
