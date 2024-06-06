@@ -1,0 +1,18 @@
+{{- include "bjw-s.common.loader.init" . }}
+{{- $dot := . }}
+{{- range $name, $v := .Values.certificates }}
+{{- if dig "enabled" true $v }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "bjw-s.common.lib.chart.names.fullname" $dot }}-{{ $name }}
+spec:
+  dnsNames:
+    {{- toYaml $v.dnsNames | nindent 4 }}
+  issuerRef:
+    {{- toYaml $v.issuerRef | nindent 4 }}
+  secretName: {{ include "bjw-s.common.lib.chart.names.fullname" $dot }}-{{ $name }}-cert
+---
+
+{{- end }}
+{{- end }}
