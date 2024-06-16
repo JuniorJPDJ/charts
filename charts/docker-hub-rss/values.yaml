@@ -8,7 +8,7 @@
 image:
   repository: ghcr.io/theconnman/docker-hub-rss
   pullPolicy: Always
-  tag: "0.6.0@sha256:3850badd3ebdb7d6583c8b67ebbcdd077b4e4ff2d8362ee31d78e334462d616f"
+  tag: "0.6.1@sha256:7a6dd3f09dd9a3ad4ec3b6cf83ceb3fb11f15fd8df8b480a851e974ee0ff8e26"
 
 controllers:
   main:
