@@ -1,0 +1,21 @@
+apiVersion: v2
+name: cert-puller
+description: Puller/refresher for certificate on public domain, when you are already have the private key
+type: application
+version: 0.1.5
+appVersion: latest
+kubeVersion: ">=1.22.0-0"
+keywords:
+  - openssl
+  - tls
+  - ssl
+dependencies:
+  - name: common
+    repository: https://bjw-s.github.io/helm-charts
+    version: 3.2.1
+sources:
+  - https://github.com/JuniorJPDJ/charts/tree/master/charts/cert-puller
+annotations:
+  artifacthub.io/links: |-
+    - name: Chart Source
+      url: https://github.com/JuniorJPDJ/charts/tree/master/charts/cert-puller
