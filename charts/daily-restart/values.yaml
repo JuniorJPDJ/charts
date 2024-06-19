@@ -15,7 +15,7 @@ controllers:
     containers:
       main:
         command:
-          - sh
+          - ash
           - '-c'
           - >
             nses="$(kubectl get deployment,statefulset,daemonset -A -l juniorjpdj.pl/daily-restart=enabled -o=json | jq '[.items[].metadata.namespace] | unique | .[]' -r)" ;
