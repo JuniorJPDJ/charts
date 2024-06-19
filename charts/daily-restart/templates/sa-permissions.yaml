@@ -31,5 +31,6 @@ roleRef:
   name: {{ include "bjw-s.common.lib.chart.names.fullname" . }}
 subjects:
   - kind: ServiceAccount
+    namespace: {{ .Release.Namespace }}
     name: {{ include "bjw-s.common.lib.chart.names.fullname" . }}
 ---
