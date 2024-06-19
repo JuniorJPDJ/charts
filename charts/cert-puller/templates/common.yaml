@@ -23,7 +23,7 @@ controllers:
             echo "Updating certificate in $SECRET_NAME secret";
             kubectl patch secret "$SECRET_NAME" -p '{"data":
               {"tls.crt": "'"$(base64 -w 0 /tmp/tls.crt)"'"}
-            }'
+            }' --field-manager='cert-puller'
 {{- end }}
 {{- end }}
 
