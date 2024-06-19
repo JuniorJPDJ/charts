@@ -1,0 +1,21 @@
+apiVersion: v2
+name: daily-restart
+description: Perform daily restart for Deployments, StatefulSets and DaemonSets with label
+type: application
+version: 0.1.0
+appVersion: latest
+kubeVersion: ">=1.22.0-0"
+keywords:
+  - openssl
+  - tls
+  - ssl
+dependencies:
+  - name: common
+    repository: https://bjw-s.github.io/helm-charts
+    version: 3.2.1
+sources:
+  - https://github.com/JuniorJPDJ/charts/tree/master/charts/daily-restart
+annotations:
+  artifacthub.io/links: |-
+    - name: Chart Source
+      url: https://github.com/JuniorJPDJ/charts/tree/master/charts/daily-restart
