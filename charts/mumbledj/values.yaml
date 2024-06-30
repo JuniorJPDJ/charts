@@ -151,7 +151,7 @@ controllers:
         image:
           repository: ghcr.io/juniorjpdj/containers/openssl-kubectl
           pullPolicy: Always
-          tag: 1.30.0-r7@sha256:780c2da14b3122e2f38ca71ebdb50f7a121129e370dd792fc40f039733aec946
+          tag: 1.30.0-r8@sha256:03f517ec7ff824dcef221a9c81dd0678ce74c8516532897789e6008368bfe6b4
         command:
           - /usr/local/bin/cert-gen.sh
         env:
