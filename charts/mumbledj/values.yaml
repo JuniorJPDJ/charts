@@ -11,7 +11,7 @@ replicas: 1
 image:
   repository: ghcr.io/juniorjpdj/mumbledj
   pullPolicy: Always
-  tag: latest@sha256:494548ba539d593a1c303b5e9dd8a2beb79c728f277b6164bce1ead4c5bd96be
+  tag: latest@sha256:203aca8df9834ddbca3219823dbe353319fb6fff65b94fd5f7c382c3569195f8
 
 
 config:
