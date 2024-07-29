@@ -115,6 +115,7 @@ defaultPodOptions:
 
 controllers:
   webserver:
+    strategy: RollingUpdate
     containers:
       main:
         image:
@@ -130,6 +131,7 @@ controllers:
           runAsUser: 101
           runAsGroup: 101
   rsyncd:
+    strategy: RollingUpdate
     containers:
       main:
         image:
