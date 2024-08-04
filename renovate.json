@@ -8,7 +8,6 @@
     "customManagers:helmChartYamlAppVersions"
   ],
   "prHourlyLimit": 0,
-  "bumpVersion": "patch",
   "packageRules": [
     {
       "description": "Treat every chart as separate group with separate scope and branch prefix",
