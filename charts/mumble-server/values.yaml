@@ -8,7 +8,7 @@
 image:
   repository: mumblevoip/mumble-server
   pullPolicy: Always
-  tag: v1.5.634@sha256:3617c6b95a16521f6b29a30b27ed8183ac4643d4fc17077d04017f3d778d3f3b
+  tag: v1.5.634@sha256:cf8042a291b9d3e695211811cf89f07119ed9aba49edbcfbb5dfd01ef282bcee
 
 certificate:
   # requires working installation of cert-manager
