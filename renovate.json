@@ -22,11 +22,11 @@
       "matchDatasources": [
         "docker"
       ],
-      "matchPackagePrefixes": [
-        "ghcr.io/juniorjpdj/containers/"
-      ],
       "allowedVersions": "/^[\\d.]+-r\\d+$/",
-      "versioning": "loose"
+      "versioning": "loose",
+      "matchPackageNames": [
+        "ghcr.io/juniorjpdj/containers/{/,}**"
+      ]
     },
     {
       "description": "Disable digest pinning for regex managers in Chart.yaml used for appVersion upgrading",
