@@ -5,9 +5,12 @@
     ":semanticCommits",
     ":semanticCommitScopeDisabled",
     "docker:enableMajor",
-    "customManagers:helmChartYamlAppVersions"
+    "customManagers:helmChartYamlAppVersions",
+    ":disableRateLimiting",
+    ":ignoreUnstable",
+    ":separateMultipleMajorReleases",
+    ":updateNotScheduled"
   ],
-  "prHourlyLimit": 0,
   "packageRules": [
     {
       "description": "Treat every chart as separate group with separate scope and branch prefix",
