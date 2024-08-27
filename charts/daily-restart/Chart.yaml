@@ -2,7 +2,7 @@ apiVersion: v2
 name: daily-restart
 description: Perform daily restart for Deployments, StatefulSets and DaemonSets with label
 type: application
-version: 0.1.11
+version: 0.1.12
 appVersion: latest
 kubeVersion: ">=1.22.0-0"
 keywords:
@@ -12,7 +12,7 @@ keywords:
 dependencies:
   - name: common
     repository: https://bjw-s.github.io/helm-charts
-    version: 3.3.2
+    version: 3.4.0
 sources:
   - https://github.com/JuniorJPDJ/charts/tree/master/charts/daily-restart
 annotations:
