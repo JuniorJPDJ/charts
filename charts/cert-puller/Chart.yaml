@@ -2,7 +2,7 @@ apiVersion: v2
 name: cert-puller
 description: Puller/refresher for certificate on public domain, when you are already have the private key
 type: application
-version: 0.1.20
+version: 0.1.21
 appVersion: latest
 kubeVersion: ">=1.22.0-0"
 keywords:
@@ -12,7 +12,7 @@ keywords:
 dependencies:
   - name: common
     repository: https://bjw-s.github.io/helm-charts
-    version: 3.5.0
+    version: 3.5.1
 sources:
   - https://github.com/JuniorJPDJ/charts/tree/master/charts/cert-puller
 annotations:
