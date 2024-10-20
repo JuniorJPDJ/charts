@@ -2,7 +2,7 @@ apiVersion: v2
 name: cert-puller
 description: Puller/refresher for certificate on public domain, when you are already have the private key
 type: application
-version: 0.1.21
+version: 0.1.22
 appVersion: latest
 kubeVersion: ">=1.22.0-0"
 keywords:
