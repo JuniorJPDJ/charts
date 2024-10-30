@@ -2,9 +2,9 @@ apiVersion: v2
 name: ejabberd
 description: Robust, Ubiquitous and Massively Scalable Messaging Platform (XMPP, MQTT, SIP Server)
 type: application
-version: 0.1.14
+version: 0.1.15
 # renovate: image=ghcr.io/juniorjpdj/containers/ejabberd-captcha
-appVersion: 24.07-r2
+appVersion: 24.10-r1
 kubeVersion: ">=1.22.0-0"
 keywords:
   - ejabberd
