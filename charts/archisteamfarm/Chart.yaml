@@ -2,9 +2,9 @@ apiVersion: v2
 name: archisteamfarm
 description: C# application with primary purpose of farming Steam cards from multiple accounts simultaneously.
 type: application
-version: 0.1.54
+version: 0.1.55
 # renovate: image=ghcr.io/justarchinet/archisteamfarm
-appVersion: 6.1.0.3
+appVersion: 6.1.1.0
 kubeVersion: ">=1.22.0-0"
 keywords:
   - rss
