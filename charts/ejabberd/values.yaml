@@ -233,7 +233,7 @@ certificates:
 image:
   repository: ghcr.io/juniorjpdj/containers/ejabberd-captcha
   pullPolicy: Always
-  tag: 24.10-r1@sha256:fd73ec041697a4741a3e2750e016a88373de11c51c411fa68b356e1338418d58
+  tag: 24.12-r1@sha256:fafefb1f0a1a10587e140e41a93577ab9a836eae9f47fb92f707a2cc1e1259d7
 
 persistence:
   upload:
