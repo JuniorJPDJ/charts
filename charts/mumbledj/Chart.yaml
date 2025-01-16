@@ -2,7 +2,7 @@ apiVersion: v2
 name: mumbledj
 description: A Mumble bot that plays audio fetched from various media sites.
 type: application
-version: 0.1.91
+version: 0.1.92
 appVersion: latest
 kubeVersion: ">=1.22.0-0"
 keywords:
