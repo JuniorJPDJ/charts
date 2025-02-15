@@ -2,7 +2,7 @@ apiVersion: v2
 name: daily-restart
 description: Perform daily restart for Deployments, StatefulSets and DaemonSets with label
 type: application
-version: 0.1.25
+version: 0.1.26
 appVersion: latest
 kubeVersion: ">=1.22.0-0"
 keywords:
