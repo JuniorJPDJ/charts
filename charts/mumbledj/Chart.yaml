@@ -2,7 +2,7 @@ apiVersion: v2
 name: mumbledj
 description: A Mumble bot that plays audio fetched from various media sites.
 type: application
-version: 0.1.107
+version: 0.1.108
 appVersion: latest
 kubeVersion: ">=1.22.0-0"
 keywords:
@@ -16,7 +16,7 @@ keywords:
 dependencies:
   - name: common
     repository: https://bjw-s.github.io/helm-charts
-    version: 3.7.1
+    version: 3.7.2
 sources:
   - https://github.com/JuniorJPDJ/mumbledj
   - https://github.com/JuniorJPDJ/charts/tree/master/charts/mumbledj
