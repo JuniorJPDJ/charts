@@ -2,7 +2,7 @@ apiVersion: v2
 name: deluge
 description: Deluge is a lightweight, Free Software, cross-platform BitTorrent client.
 type: application
-version: 0.1.17
+version: 0.1.18
 appVersion: 2.0.3
 kubeVersion: ">=1.22.0-0"
 keywords:
