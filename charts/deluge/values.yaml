@@ -50,7 +50,7 @@ controllers:
             rm -f /config/plugins/ltConfig-*.egg ;
             cp /usr/share/deluge/plugins/ltConfig-*.egg /config/plugins ;
             fi ;
-            run_deluge.sh
+            start_deluge.sh
         securityContext:
           capabilities:
             drop:
