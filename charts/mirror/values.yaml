@@ -121,7 +121,7 @@ controllers:
         image:
           repository: ghcr.io/juniorjpdj/containers/nginx-rootless
           pullPolicy: Always
-          tag: 1.27.4-r2@sha256:fb772414be3420125dda09f7d258ab2bca0b38d49793ac9431e9f42b98993a55
+          tag: 1.27.4-r2@sha256:b8e27cf0d476cac772b60756259f7bbdb270d1e0b70e53ad4cf3cc649173795a
         securityContext:
           capabilities:
             drop:
