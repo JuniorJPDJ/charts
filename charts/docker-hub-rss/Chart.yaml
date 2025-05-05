@@ -2,7 +2,7 @@ apiVersion: v2
 name: docker-hub-rss
 description: RSS feed for Docker Hub images
 type: application
-version: 0.1.19
+version: 0.1.20
 # renovate: image=ghcr.io/theconnman/docker-hub-rss
 appVersion: 0.6.1
 kubeVersion: ">=1.22.0-0"
@@ -12,7 +12,7 @@ keywords:
   - dockerhub
 dependencies:
   - name: common
-    repository: https://bjw-s.github.io/helm-charts
+    repository: https://bjw-s-labs.github.io/helm-charts
     version: 3.7.3
 sources:
   - https://github.com/TheConnMan/docker-hub-rss
