@@ -2,7 +2,7 @@ apiVersion: v2
 name: ejabberd
 description: Robust, Ubiquitous and Massively Scalable Messaging Platform (XMPP, MQTT, SIP Server)
 type: application
-version: 0.1.28
+version: 0.1.29
 # renovate: image=ghcr.io/juniorjpdj/containers/ejabberd-captcha
 appVersion: 25.04-r2
 kubeVersion: ">=1.22.0-0"
@@ -16,7 +16,7 @@ keywords:
 dependencies:
   - name: common
     repository: https://bjw-s-labs.github.io/helm-charts
-    version: 4.0.1
+    version: 4.1.1
 sources:
   - https://github.com/processone/ejabberd
   - https://github.com/JuniorJPDJ/containers
