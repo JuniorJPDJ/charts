@@ -10,6 +10,7 @@ controllers:
 
 secrets:
   secret:
+    suffix: secret
     stringData:
       config.yaml: |
         {{- toYaml .Values.config | nindent 8 }}
