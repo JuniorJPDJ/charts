@@ -9,6 +9,7 @@ controllers:
 
 configMaps:
   config:
+    suffix: config
     data:
       {{- range $name, $v := .Values.configs }}
       {{ quote $name }}: |-
@@ -17,6 +18,7 @@ configMaps:
 
 secrets:
   config:
+    suffix: config
     stringData:
       {{- range $name, $v := .Values.secretConfigs }}
       {{ quote $name }}: |-
