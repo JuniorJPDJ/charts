@@ -12,6 +12,8 @@ controllers:
     cronjob:
       # restart schedule
       schedule: "0 4 * * *"
+    serviceAccount:
+      identifier: daily-restart
     containers:
       main:
         command:
@@ -34,4 +36,4 @@ controllers:
           pullPolicy: Always
 
 serviceAccount:
-  create: true
+  daily-restart: {}
