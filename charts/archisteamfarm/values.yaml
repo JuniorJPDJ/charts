@@ -61,6 +61,7 @@ controllers:
 
 persistence:
   data:
+    suffix: data
     enabled: false
     type: persistentVolumeClaim
     accessMode: ReadWriteOnce
