@@ -23,6 +23,7 @@ persistence:
 
 configMaps:
   config:
+    suffix: config
     data:
       {{- range $name, $cfg := .Values.configs }}
       {{ quote $name }}: |-
