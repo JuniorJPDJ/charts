@@ -7,6 +7,8 @@ controllers:
   pull-{{ replace "." "-" $name }}-cert:
     type: cronjob
     primary: false
+    serviceAccount:
+      identifier: cert-puller
     cronjob:
       schedule: {{ required "refreshSchedule is required" $v.refreshSchedule }}
     containers:
@@ -31,6 +33,7 @@ secrets:
 {{- range $name, $v := .Values.domains }}
 {{- if dig "enabled" true $v }}
   {{ replace "." "-" $name }}-cert:
+    suffix: {{ replace "." "-" $name }}-cert
     stringData:
       tls.key: |-
         {{- required "privateKey is required" $v.privateKey | nindent 8 }}

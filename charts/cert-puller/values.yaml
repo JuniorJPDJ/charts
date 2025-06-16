@@ -29,4 +29,4 @@ containerConfig:
     pullPolicy: Always
 
 serviceAccount:
-  create: true
+  cert-puller: {}
