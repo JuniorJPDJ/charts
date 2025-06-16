@@ -132,13 +132,15 @@ controllers:
           runAsNonRoot: true
           runAsUser: 100
           runAsGroup: 101
-  cert-hook-job:
+  cert-gen-hook-job:
     annotations:
       helm.sh/hook: post-install,post-upgrade
       helm.sh/hook-delete-policy: before-hook-creation
       argocd.argoproj.io/hook: Sync
       argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
     type: job
+    serviceAccount:
+      identifier: cert-gen
     job:
       parallelism: 1
       completions: 1
@@ -162,11 +164,12 @@ controllers:
 
 
 serviceAccount:
-  create: true
+  cert-gen: {}
 
 
 configMaps:
   scripts:
+    suffix: scripts
     data:
       cert-gen.sh: |-
         #!/bin/ash
