@@ -204,6 +204,7 @@ configs:
 
 secrets:
   envs:
+    suffix: envs
     stringData:
       # POSTGRES_SERVER:
       # POSTGRES_DB:
