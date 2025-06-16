@@ -18,6 +18,7 @@ image:
 configMaps:
   envs:
     enabled: true
+    suffix: envs
     data:
       DB_NAME: shynet
       DB_USER: shynet
@@ -45,6 +46,7 @@ configMaps:
 secrets:
   envs:
     enabled: true
+    suffix: envs
     stringData:
       # DB_PASSWORD: changeme
       # EMAIL_HOST_USER: shynet@example.com
