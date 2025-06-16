@@ -37,6 +37,7 @@ persistence:
 {{- range $name, $v := .Values.syncJobs }}
 {{- if dig "enabled" true $v }}
   {{ $name }}:
+    suffix: {{ $name }}
     type: persistentVolumeClaim
     accessMode: ReadWriteOnce
     {{- with $v.storageClass }}

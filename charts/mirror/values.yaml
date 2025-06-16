@@ -71,6 +71,7 @@ syncrepoJobDefaults:
 
 persistence:
   data:
+    suffix: data
     type: persistentVolumeClaim
     accessMode: ReadWriteOnce
     retain: true
