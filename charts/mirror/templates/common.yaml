@@ -26,7 +26,7 @@ controllers:
         {{- toYaml $.Values.rsyncJobDefaults | nindent 8 }}
         command:
           - rsync
-          {{- default (list "-rtlvH" "--delete-after" "--delay-updates" "--safe-links") $v.rsyncArgs | toYaml | nindent 10 }}
+          {{- default (list "-rtlvHO" "--delete-after" "--delay-updates" "--safe-links") $v.rsyncArgs | toYaml | nindent 10 }}
           - {{ required "source is required" $v.source | quote }}
           - /var/mirror
         {{- end }}
