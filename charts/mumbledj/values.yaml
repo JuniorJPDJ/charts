@@ -95,7 +95,7 @@ persistence:
     identifier: scripts
     defaultMode: 0555
     advancedMounts:
-      cert-hook-job:
+      cert-gen-hook-job:
         main:
           - path: /usr/local/bin
             readOnly: true
