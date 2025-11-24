@@ -124,6 +124,8 @@ controllers:
             --username "$USERNAME$suffix"
             --p12 "/home/mumbledj/.config/mumbledj/cert$suffix.p12"
             $@
+        serviceAccount:
+          identifier: mumbledj
         securityContext:
           capabilities:
             drop:
@@ -164,6 +166,7 @@ controllers:
 
 
 serviceAccount:
+  mumbledj: {}
   cert-gen: {}
 
 
