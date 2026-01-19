@@ -2,9 +2,9 @@ apiVersion: v2
 name: docker-hub-rss
 description: RSS feed for Docker Hub images
 type: application
-version: 0.1.27
+version: 0.1.28
 # renovate: image=ghcr.io/theconnman/docker-hub-rss
-appVersion: 0.6.1
+appVersion: 0.6.2
 kubeVersion: ">=1.22.0-0"
 keywords:
   - rss
