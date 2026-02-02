@@ -2,7 +2,7 @@ apiVersion: v2
 name: mirror
 description: Arch Linux (or generic rsync-cloned) mirror
 type: application
-version: 0.1.102
+version: 0.1.103
 appVersion: 0.1.0
 kubeVersion: ">=1.22.0-0"
 keywords:
