@@ -149,7 +149,7 @@ jobs:
     name: Deploy Helm Repository to GitHub Pages
     runs-on: ubuntu-latest
     needs: generate-index
-    if: needs.list_charts.outputs.matrix != '[]'
+    if: needs.list_charts.outputs.matrix != '[]' && github.event_name != 'pull_request'
     permissions:
       pages: write
       id-token: write
