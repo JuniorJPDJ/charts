@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy-index:
-    name: Deploy index.yaml from PR
+    name: Deploy index.yaml
     runs-on: ubuntu-latest
     permissions:
       pages: write
