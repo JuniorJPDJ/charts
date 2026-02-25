@@ -100,7 +100,7 @@ jobs:
           update_dependencies: true
 
       - name: Upload chart artifact for index
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: chart-${{ matrix.chart }}
           path: ${{ runner.temp }}/${{ matrix.chart }}-*.tgz
@@ -113,7 +113,7 @@ jobs:
     if: needs.list_charts.outputs.matrix != '[]' && github.event_name != 'pull_request'
     steps:
       - name: Download chart artifacts
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           pattern: chart-*
           path: ${{ runner.temp }}/charts
@@ -141,7 +141,7 @@ jobs:
           cp ${{ runner.temp }}/charts/index.yaml pages/
 
       - name: Upload index artifact
-        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: pages
 
@@ -159,4 +159,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+
