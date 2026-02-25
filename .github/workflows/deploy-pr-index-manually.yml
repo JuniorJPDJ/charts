@@ -1,0 +1,36 @@
+name: Deploy Helm Repository index to Pages manually
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-index:
+    name: Deploy index.yaml from PR
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: '0'
+
+      - name: Validate index.yaml exists
+        run: |
+          if [ ! -f pages/index.yaml ]; then
+            echo "Error: index.yaml not found in pages/"
+            exit 1
+          fi
+
+      - name: Upload index artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
