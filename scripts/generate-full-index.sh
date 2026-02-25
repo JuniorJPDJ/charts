@@ -73,7 +73,6 @@ for chart in $CHARTS; do
   done
 done
 
-# Count downloaded charts
 CHART_COUNT=$(find "$TEMP_DIR" -name "*.tgz" -printf '.' | wc -c)
 echo "Downloaded $CHART_COUNT chart packages"
 
@@ -82,21 +81,18 @@ if [ "$CHART_COUNT" -eq 0 ]; then
     exit 0
 fi
 
-# Generate index.yaml
 echo "Generating index.yaml..."
 helm repo index "$TEMP_DIR" --url "oci://ghcr.io/${REPO_OWNER,,}/${REPO_NAME,,}"
 
-# Update created timestamps with real OCI upload dates
-echo "Updating timestamps..."
+echo "Updating timestamps and URLs..."
 for key in "${!CHART_DATES[@]}"; do
-  # Key format: reponame/chartname:version, need just chartname for index lookup
   chart_path="${key%%:*}"
   chart_name="${chart_path#charts/}"
   chart_version="${key#*:}"
   created_date="${CHART_DATES[$key]}"
-  if [ -n "$created_date" ]; then
-    yq -i ".entries[\"$chart_name\"] |= (.[] |= select(.version == \"$chart_version\") |= .created = \"$created_date\")" "$TEMP_DIR/index.yaml"
-  fi
+  url="oci://ghcr.io/${REPO_OWNER,,}/${REPO_NAME,,}/$chart_name:$chart_version"
+
+  yq -i ".entries[\"$chart_name\"] |= (.[] |= select(.version == \"$chart_version\") |= (.created = \"$created_date\" | .urls = [\"$url\"]))" "$TEMP_DIR/index.yaml"
 done
 
 cp "$TEMP_DIR/index.yaml" "$OUTPUT_DIR/"
