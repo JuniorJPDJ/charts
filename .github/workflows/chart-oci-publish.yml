@@ -100,7 +100,7 @@ jobs:
           update_dependencies: true
 
       - name: Upload chart artifact for index
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: chart-${{ matrix.chart }}
           path: ${{ runner.temp }}/${{ matrix.chart }}-*.tgz
@@ -113,7 +113,7 @@ jobs:
     if: needs.list_charts.outputs.matrix != '[]' && github.event_name != 'pull_request'
     steps:
       - name: Download chart artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           pattern: chart-*
           path: ${{ runner.temp }}/charts
