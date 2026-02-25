@@ -98,3 +98,62 @@ jobs:
           registry_username: ${{ github.actor }}
           registry_password: ${{ secrets.GITHUB_TOKEN }}
           update_dependencies: true
+
+      - name: Upload chart artifact for index
+        uses: actions/upload-artifact@v4
+        with:
+          name: chart-${{ matrix.chart }}
+          path: ${{ runner.temp }}/${{ matrix.chart }}-*.tgz
+          retention-days: 1
+
+  generate-index:
+    name: Generate Helm Repository index
+    runs-on: ubuntu-latest
+    needs: build
+    if: needs.list_charts.outputs.matrix != '[]' && github.event_name != 'pull_request'
+    steps:
+      - name: Download chart artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: chart-*
+          path: ${{ runner.temp }}/charts
+          merge-multiple: true
+
+      - name: Download existing index
+        run: |
+          mkdir -p pages
+          curl -fsSL https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/index.yaml \
+            -o pages/index.yaml 2>/dev/null || true
+
+      - name: Generate index.yaml with OCI URLs
+        run: |
+          if [ -f pages/index.yaml ]; then
+            helm repo index ${{ runner.temp }}/charts \
+              --url oci://ghcr.io/${{ github.repository_owner }}/charts \
+              --merge pages/index.yaml
+          else
+            helm repo index ${{ runner.temp }}/charts \
+              --url oci://ghcr.io/${{ github.repository_owner }}/charts
+          fi
+          cp ${{ runner.temp }}/charts/index.yaml pages/
+
+      - name: Upload index artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages
+
+  deploy-pages:
+    name: Deploy Helm Repository to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: generate-index
+    if: needs.list_charts.outputs.matrix != '[]'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
