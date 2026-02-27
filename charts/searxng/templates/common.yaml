@@ -1,2 +1,40 @@
+{{/* Preprocess values and prepare config file */}}
+{{- define "searxng.preprocess" -}}
+# TODO: valkey autoconnect when enabled
+# TODO: randomize secret key when empty
+# TODO: auto-setup base_url when empty (ingress hosts)
+
+secrets:
+  configs:
+    suffix: configs
+    stringData:
+      settings.yml: |-
+        {{- toYaml (index .Values.configs "settings.yml") | nindent 8 }}
+
+configMaps:
+  configs:
+    suffix: configs
+    data:
+      limiter.toml: |-
+        {{- toToml (index .Values.configs "limiter.toml") | nindent 8 }}
+
+persistence:
+  settings:
+    type: secret
+    identifier: configs
+    globalMounts:
+      - path: /etc/searxng/settings.yml
+        readOnly: true
+        subPath: settings.yml
+  limiter:
+    type: configMap
+    identifier: configs
+    globalMounts:
+      - path: /etc/searxng/limiter.toml
+        readOnly: true
+        subPath: limiter.toml
+{{- end -}}
+{{- $_ := merge .Values (include "searxng.preprocess" . | fromYaml) -}}
+
 {{/* Render the templates */}}
 {{- include "bjw-s.common.loader.all" . }}

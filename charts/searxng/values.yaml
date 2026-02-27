@@ -5,6 +5,29 @@
 # https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
 #
 
+configs:
+  settings.yml:
+    # All possible values: https://github.com/searxng/searxng/blob/master/searx/settings.yml
+
+    # See https://docs.searxng.org/admin/settings/settings.html#settings-use-default-settings
+    use_default_settings: true
+    server:
+      base_url: ""    # from ingress host when empty
+      secret_key: ""  # random if left empty
+      limiter: false  # enable this when running the instance for a public usage on the internet
+      image_proxy: true
+    # Valkey automatically enabled and set up by the chart, only set it if using external valkey
+    # valkey:
+    #  url: valkey://valkey:6379/0
+
+  limiter.toml:
+    # This configuration file updates the default configuration file
+    # See https://github.com/searxng/searxng/blob/master/searx/limiter.toml
+    botdetection.ip_limit:
+      # activate advanced bot protection
+      # enable this when running the instance for a public usage on the internet
+      link_token: false
+
 controllers:
   main:
     strategy: RollingUpdate
@@ -49,15 +72,6 @@ ingress:
     #     - searxng.example.com
 
 persistence:
-  etc:
-    type: persistentVolumeClaim
-    accessMode: ReadWriteOnce
-    retain: true
-    size: 1Gi
-    globalMounts:
-      - path: /etc/searxng
-        readOnly: false
-    suffix: etc
   cache:
     type: persistentVolumeClaim
     accessMode: ReadWriteOnce
@@ -70,9 +84,5 @@ persistence:
 
 valkey:
   enabled: true
-  architecture: standalone
-  # auth:
-  #  password: # Set this to avoid remaking valkey on each release
-  master:
-    persistence:
-      enabled: false
+  dataStorage:
+    enabled: false

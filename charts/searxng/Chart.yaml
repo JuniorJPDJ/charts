@@ -15,8 +15,9 @@ dependencies:
     repository: https://bjw-s-labs.github.io/helm-charts
     version: 4.6.2
   - name: valkey
-    repository: https://charts.bitnami.com/bitnami
-    version: 0.3.13
+    repository: https://valkey.io/valkey-helm/
+    version: 0.9.3
+    condition: valkey.enabled
 sources:
   - https://github.com/searxng/searxng
   - https://github.com/searxng/searxng-docker
