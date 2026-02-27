@@ -53,10 +53,11 @@ persistence:
     type: persistentVolumeClaim
     accessMode: ReadWriteOnce
     retain: true
+    size: 1Gi
     globalMounts:
       - path: /etc/searxng
         readOnly: false
-    size: 1Gi
+    suffix: etc
 
 valkey:
   enabled: true
