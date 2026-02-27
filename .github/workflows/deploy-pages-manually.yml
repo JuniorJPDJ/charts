@@ -1,11 +1,11 @@
-name: Deploy Helm Repository index to Pages manually
+name: Deploy Helm repository to GH Pages manually
 
 on:
   workflow_dispatch:
 
 jobs:
   deploy-index:
-    name: Deploy index.yaml
+    name: Deploy GH Pages
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -26,7 +26,7 @@ jobs:
             exit 1
           fi
 
-      - name: Upload index artifact
+      - name: Upload pages artifact
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: pages
