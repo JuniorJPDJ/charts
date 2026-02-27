@@ -58,6 +58,15 @@ persistence:
       - path: /etc/searxng
         readOnly: false
     suffix: etc
+  cache:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    retain: true
+    size: 10Gi
+    globalMounts:
+      - path: /var/cache/searxng
+        readOnly: false
+    suffix: cache
 
 valkey:
   enabled: true
