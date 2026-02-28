@@ -18,7 +18,7 @@ configs:
       image_proxy: true
     # Valkey automatically enabled and set up by the chart, only set it if using external valkey
     # valkey:
-    #  url: valkey://valkey:6379/0
+    #   url: valkey://valkey:6379/0
 
   limiter.toml:
     # This configuration file updates the default configuration file

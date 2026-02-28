@@ -1,8 +1,24 @@
 {{/* Preprocess values and prepare config file */}}
 {{- define "searxng.preprocess" -}}
-# TODO: valkey autoconnect when enabled
-# TODO: randomize secret key when empty
-# TODO: auto-setup base_url when empty (ingress hosts)
+{{- /* secret_key generation */}}
+{{- if not (index .Values.configs "settings.yml" "server" "secret_key") }}
+{{- $_ := set (index .Values.configs "settings.yml" "server") "secret_key" (randAlphaNum 64) }}
+{{- end }}
+
+{{- /* base_url setup from ingress host */}}
+{{- if not (index .Values.configs "settings.yml" "server" "base_url") }}
+{{- if gt (len .Values.ingress.main.hosts) 0 }}
+{{- $_ := set (index .Values.configs "settings.yml" "server") "base_url" (index .Values.ingress.main.hosts 0).host }}
+{{- end }}
+{{- end }}
+
+{{- /* valkey autoconnect if enabled */}}
+{{- if and .Values.valkey.enabled (not (dig "settings.yml" "valkey" "url" nil .Values.configs)) }}
+{{- $valkey := dig "settings.yml" "valkey" (dict) .Values.configs }}
+{{- $fake_valkey := dict "Values" .Values.valkey "Chart" (dict "Name" "valkey") "Release" .Release }}
+{{- $_ := set $valkey "url" (printf "valkey://%s:6379/0" (include "valkey.fullname" $fake_valkey)) }}
+{{- $_ := set (index .Values.configs "settings.yml") "valkey" $valkey }}
+{{- end }}
 
 secrets:
   configs:
