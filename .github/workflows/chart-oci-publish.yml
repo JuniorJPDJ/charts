@@ -123,7 +123,7 @@ jobs:
         run: |
           mkdir -p pages
           curl -fsSL https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/index.yaml \
-            -o pages/index.yaml 2>/dev/null || true
+            -o pages/index.yaml || true
 
       - name: Generate index.yaml with OCI URLs
         run: |
@@ -136,7 +136,7 @@ jobs:
               --url oci://ghcr.io/${{ github.repository_owner }}/charts
           fi
           
-          yq -i '.entries[] | .[] | select(.urls[0] | test("oci://.*\\.tgz$")) | .urls[0] |= ((split("-") | .[:-1] | join("-") | downcase) + ":" + .version)' ${{ runner.temp }}/charts/index.yaml
+          yq -i '.entries[].[] |= ((select(.urls[0] | test("oci://.*\\.tgz$")) | .urls[0] = ((.urls[0] | split("-") | .[:-1] | join("-") | downcase) + ":" + .version)) // .)' ${{ runner.temp }}/charts/index.yaml
           
           cp ${{ runner.temp }}/charts/index.yaml pages/
 
