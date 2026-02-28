@@ -61,7 +61,7 @@ ingress:
     annotations: {}
     hosts: []
     # - host: searxng.example.com
-    #  paths:
+    #   paths:
     #     - path: /
     #       service:
     #         identifier: main

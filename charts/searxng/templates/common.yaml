@@ -8,7 +8,9 @@
 {{- /* base_url setup from ingress host */}}
 {{- if not (index .Values.configs "settings.yml" "server" "base_url") }}
 {{- if gt (len .Values.ingress.main.hosts) 0 }}
-{{- $_ := set (index .Values.configs "settings.yml" "server") "base_url" (index .Values.ingress.main.hosts 0).host }}
+{{- $proto := ternary "https" "http" (gt (len .Values.ingress.main.tls) 0) }}
+{{- $host := (index .Values.ingress.main.hosts 0).host }}
+{{- $_ := set (index .Values.configs "settings.yml" "server") "base_url" (printf "%s://%s" $proto $host) }}
 {{- end }}
 {{- end }}
 
