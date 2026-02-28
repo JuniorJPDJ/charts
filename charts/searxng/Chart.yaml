@@ -1,0 +1,34 @@
+apiVersion: v2
+name: searxng
+description: Free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
+type: application
+version: 0.1.0
+appVersion: latest
+kubeVersion: ">=1.22.0-0"
+keywords:
+  - search
+  - metasearch
+  - metasearch-enging
+  - search-enging
+dependencies:
+  - name: common
+    repository: https://bjw-s-labs.github.io/helm-charts
+    version: 4.6.2
+  - name: valkey
+    repository: https://valkey.io/valkey-helm/
+    version: 0.9.3
+    condition: valkey.enabled
+sources:
+  - https://github.com/searxng/searxng
+  - https://github.com/searxng/searxng-docker
+  - https://github.com/JuniorJPDJ/charts/tree/master/charts/searxng
+annotations:
+  artifacthub.io/links: |-
+    - name: App Webpage
+      url: https://docs.searxng.org/
+    - name: App Source
+      url: https://github.com/searxng/searxng
+    - name: Dockerfile Source
+      url: https://github.com/searxng/searxng-docker
+    - name: Chart Source
+      url: https://github.com/JuniorJPDJ/charts/tree/master/charts/searxng

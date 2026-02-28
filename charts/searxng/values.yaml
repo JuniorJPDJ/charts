@@ -1,0 +1,88 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
+#
+
+configs:
+  settings.yml:
+    # All possible values: https://github.com/searxng/searxng/blob/master/searx/settings.yml
+
+    # See https://docs.searxng.org/admin/settings/settings.html#settings-use-default-settings
+    use_default_settings: true
+    server:
+      base_url: ""    # from ingress host when empty
+      secret_key: ""  # random if left empty
+      limiter: false  # enable this when running the instance for a public usage on the internet
+      image_proxy: true
+    # Valkey automatically enabled and set up by the chart, only set it if using external valkey
+    # valkey:
+    #   url: valkey://valkey:6379/0
+
+  limiter.toml:
+    # This configuration file updates the default configuration file
+    # See https://github.com/searxng/searxng/blob/master/searx/limiter.toml
+    botdetection.ip_limit:
+      # activate advanced bot protection
+      # enable this when running the instance for a public usage on the internet
+      link_token: false
+
+controllers:
+  main:
+    strategy: RollingUpdate
+    containers:
+      main:
+        image:
+          repository: docker.io/searxng/searxng
+          pullPolicy: Always
+          tag: 2026.2.27-272833136@sha256:ce8b557f7ddd6e4b5f0302b04862a2e2594fc928d4cf3662e5268d15dd54ac14
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+            add:
+              - CHOWN
+              - SETGID
+              - SETUID
+
+service:
+  main:
+    type: ClusterIP
+    controller: main
+    ports:
+      http:
+        port: 8080
+        protocol: HTTP
+
+ingress:
+  main:
+    enabled: false
+    annotations: {}
+    hosts: []
+    # - host: searxng.example.com
+    #   paths:
+    #     - path: /
+    #       service:
+    #         identifier: main
+    #         port: http
+    tls: []
+    # - secretName: searxng-cert
+    #   hosts:
+    #     - searxng.example.com
+
+persistence:
+  cache:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    retain: true
+    size: 10Gi
+    globalMounts:
+      - path: /var/cache/searxng
+        readOnly: false
+    suffix: cache
+
+valkey:
+  enabled: true
+  dataStorage:
+    enabled: false

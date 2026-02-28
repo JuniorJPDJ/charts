@@ -1,0 +1,58 @@
+{{/* Preprocess values and prepare config file */}}
+{{- define "searxng.preprocess" -}}
+{{- /* secret_key generation */}}
+{{- if not (index .Values.configs "settings.yml" "server" "secret_key") }}
+{{- $_ := set (index .Values.configs "settings.yml" "server") "secret_key" (randAlphaNum 64) }}
+{{- end }}
+
+{{- /* base_url setup from ingress host */}}
+{{- if not (index .Values.configs "settings.yml" "server" "base_url") }}
+{{- if gt (len .Values.ingress.main.hosts) 0 }}
+{{- $proto := ternary "https" "http" (gt (len .Values.ingress.main.tls) 0) }}
+{{- $host := (index .Values.ingress.main.hosts 0).host }}
+{{- $_ := set (index .Values.configs "settings.yml" "server") "base_url" (printf "%s://%s" $proto $host) }}
+{{- end }}
+{{- end }}
+
+{{- /* valkey autoconnect if enabled */}}
+{{- if and .Values.valkey.enabled (not (dig "settings.yml" "valkey" "url" nil .Values.configs)) }}
+{{- $valkey := dig "settings.yml" "valkey" (dict) .Values.configs }}
+{{- $fake_valkey := dict "Values" .Values.valkey "Chart" (dict "Name" "valkey") "Release" .Release }}
+{{- $_ := set $valkey "url" (printf "valkey://%s:6379/0" (include "valkey.fullname" $fake_valkey)) }}
+{{- $_ := set (index .Values.configs "settings.yml") "valkey" $valkey }}
+{{- end }}
+
+secrets:
+  configs:
+    suffix: configs
+    stringData:
+      settings.yml: |-
+        {{- toYaml (index .Values.configs "settings.yml") | nindent 8 }}
+
+configMaps:
+  configs:
+    suffix: configs
+    data:
+      limiter.toml: |-
+        {{- toToml (index .Values.configs "limiter.toml") | nindent 8 }}
+
+persistence:
+  settings:
+    type: secret
+    identifier: configs
+    globalMounts:
+      - path: /etc/searxng/settings.yml
+        readOnly: true
+        subPath: settings.yml
+  limiter:
+    type: configMap
+    identifier: configs
+    globalMounts:
+      - path: /etc/searxng/limiter.toml
+        readOnly: true
+        subPath: limiter.toml
+{{- end -}}
+{{- $_ := merge .Values (include "searxng.preprocess" . | fromYaml) -}}
+
+{{/* Render the templates */}}
+{{- include "bjw-s.common.loader.all" . }}
