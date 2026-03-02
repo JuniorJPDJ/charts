@@ -32,14 +32,17 @@
       "versioning": "loose"
     },
     {
-      "description": "Use loose versioning for searxng date-based tags with git hash suffix",
+      "description": "Use loose versioning for searxng date-based tags with git hash suffix and update only on Friday",
       "matchDatasources": [
         "docker"
       ],
       "matchPackageNames": [
         "docker.io/searxng/searxng"
       ],
-      "versioning": "loose"
+      "versioning": "loose",
+      "schedule": [
+        "* 5-9 * * 5"
+      ]
     },
     {
       "description": "Disable digest pinning for regex managers in Chart.yaml used for appVersion upgrading",
