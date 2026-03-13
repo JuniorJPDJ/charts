@@ -2,9 +2,9 @@ apiVersion: v2
 name: searxng
 description: Free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
 type: application
-version: 0.1.4
+version: 0.1.5
 # renovate: image=docker.io/searxng/searxng
-appVersion: 2026.3.8-a563127a2
+appVersion: 2026.3.13-867a43ac1
 kubeVersion: ">=1.22.0-0"
 keywords:
   - search
