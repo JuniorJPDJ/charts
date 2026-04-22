@@ -67,7 +67,7 @@ syncrepoJobDefaults:
   image:
     repository: ghcr.io/juniorjpdj/containers/archlinux-syncrepo
     pullPolicy: Always
-    tag: 1.0.0-r33@sha256:2f4564c3f3b5dd41eda262078ac3cb8a9a492a876b061a0717f1f7c00d7484b0
+    tag: 1.0.0-r34@sha256:4ad89779c859a898962d2169ae02928741ea981f0250c53f4175ac2985426bcb
 
 persistence:
   data:
