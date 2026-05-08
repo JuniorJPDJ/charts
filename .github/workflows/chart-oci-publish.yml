@@ -8,6 +8,10 @@ on:
     types: [opened, reopened, synchronize]
   workflow_dispatch:
 
+concurrency:
+  group: chart-oci-publish-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   list_charts:
     name: List Helm Charts to build
