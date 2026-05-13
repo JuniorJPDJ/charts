@@ -14,6 +14,9 @@ controllers:
     containers:
       main:
         {{- toYaml $dot.Values.containerConfig | nindent 8 }}
+        env:
+          - name: SECRET_NAME
+            value: '{{ "{{" }} (include "bjw-s.common.lib.secret.getByIdentifier" (dict "rootContext" $ "id" "{{ replace "." "-" $name }}-cert") | fromYaml ).name {{ "}}" }}'
         command:
           - sh
           - '-c'
@@ -21,7 +24,6 @@ controllers:
             echo "Requesting certificate from {{ required "sourceDomain is required" $v.sourceDomain }}:{{ required "sourcePort is required" $v.sourcePort }}" ;
             openssl s_client -showcerts -servername "{{ $v.sourceDomain }}" -connect "{{ $v.sourceDomain }}:{{ $v.sourcePort }}" </dev/null 2>/dev/null
             | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | tee /tmp/tls.crt ;
-            SECRET_NAME="{{ include "bjw-s.common.lib.chart.names.fullname" $dot }}-{{ replace "." "-" $name }}-cert";
             echo "Updating certificate in $SECRET_NAME secret";
             kubectl patch secret "$SECRET_NAME" -p '{"data":
               {"tls.crt": "'"$(base64 -w 0 /tmp/tls.crt)"'"}
@@ -39,6 +41,33 @@ secrets:
         {{- required "privateKey is required" $v.privateKey | nindent 8 }}
 {{- end }}
 {{- end }}
+
+rbac:
+  roles:
+    cert-puller:
+      type: Role
+      rules:
+        - apiGroups:
+            - ""
+          resources:
+            - secrets
+          resourceNames:
+            {{- range $name, $v := .Values.domains }}
+            {{- if dig "enabled" true $v }}
+            - '{{ "{{" }} (include "bjw-s.common.lib.secret.getByIdentifier" (dict "rootContext" $ "id" "{{ replace "." "-" $name }}-cert") | fromYaml ).name {{ "}}" }}'
+            {{- end }}
+            {{- end }}
+          verbs:
+            - get
+            - update
+            - patch
+  bindings:
+    cert-puller:
+      type: RoleBinding
+      roleRef:
+        identifier: cert-puller
+      subjects:
+        - identifier: cert-puller
 
 {{- end -}}
 {{- $_ := merge .Values (include "certpuller.preprocess" . | fromYaml) -}}
