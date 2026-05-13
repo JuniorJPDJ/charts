@@ -169,7 +169,14 @@ controllers:
 
 serviceAccount:
   mumbledj: {}
-  cert-gen: {}
+  cert-gen:
+    labels:
+      app.kubernetes.io/component: signingkey-job
+    annotations:
+      helm.sh/hook: post-install,post-upgrade
+      helm.sh/hook-delete-policy: before-hook-creation
+      argocd.argoproj.io/hook: Sync
+      argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
 
 
 rbac:
