@@ -37,3 +37,27 @@ controllers:
 
 serviceAccount:
   daily-restart: {}
+
+rbac:
+  roles:
+    daily-restart:
+      type: ClusterRole
+      rules:
+        - apiGroups:
+            - apps
+            - extensions
+          resources:
+            - deployments
+            - daemonsets
+            - statefulsets
+          verbs:
+            - list
+            - get
+            - patch
+  bindings:
+    daily-restart:
+      type: ClusterRoleBinding
+      roleRef:
+        identifier: daily-restart
+      subjects:
+        - identifier: daily-restart
