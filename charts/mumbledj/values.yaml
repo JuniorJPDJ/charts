@@ -164,7 +164,7 @@ controllers:
           - name: REPLICAS
             value: '{{ .Values.replicas }}'
           - name: SECRET_NAME
-            value: '{{ include "bjw-s.common.lib.chart.names.fullname" . }}-secret'
+            value: '{{ (include "bjw-s.common.lib.secret.getByIdentifier" (dict "rootContext" $ "id" "secret") | fromYaml ).name }}'
 
 
 serviceAccount:
