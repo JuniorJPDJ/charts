@@ -135,6 +135,8 @@ controllers:
           runAsUser: 100
           runAsGroup: 101
   cert-gen-hook-job:
+    labels:
+      app.kubernetes.io/component: signingkey-job
     annotations:
       helm.sh/hook: post-install,post-upgrade
       helm.sh/hook-delete-policy: before-hook-creation
@@ -168,6 +170,44 @@ controllers:
 serviceAccount:
   mumbledj: {}
   cert-gen: {}
+
+
+rbac:
+  roles:
+    cert-gen:
+      labels:
+        app.kubernetes.io/component: signingkey-job
+      annotations:
+        helm.sh/hook: post-install,post-upgrade
+        helm.sh/hook-delete-policy: before-hook-creation
+        argocd.argoproj.io/hook: Sync
+        argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+      type: Role
+      rules:
+        - apiGroups:
+            - ""
+          resources:
+            - secrets
+          resourceNames:
+            - '{{ (include "bjw-s.common.lib.secret.getByIdentifier" (dict "rootContext" $ "id" "secret") | fromYaml ).name }}'
+          verbs:
+            - get
+            - update
+            - patch
+  bindings:
+    cert-gen:
+      labels:
+        app.kubernetes.io/component: signingkey-job
+      annotations:
+        helm.sh/hook: post-install,post-upgrade
+        helm.sh/hook-delete-policy: before-hook-creation
+        argocd.argoproj.io/hook: Sync
+        argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+      type: RoleBinding
+      roleRef:
+        identifier: cert-gen
+      subjects:
+        - identifier: cert-gen
 
 
 configMaps:
