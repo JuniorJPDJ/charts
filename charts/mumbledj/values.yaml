@@ -65,7 +65,6 @@ config:
 
 
 defaultPodOptions:
-  automountServiceAccountToken: false
   securityContext:
     fsGroup: 101
     fsGroupChangePolicy: Always
