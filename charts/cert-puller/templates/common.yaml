@@ -11,6 +11,8 @@ controllers:
       identifier: cert-puller
     cronjob:
       schedule: {{ required "refreshSchedule is required" $v.refreshSchedule }}
+    pod:
+      automountServiceAccountToken: true
     containers:
       main:
         {{- toYaml $dot.Values.containerConfig | nindent 8 }}
