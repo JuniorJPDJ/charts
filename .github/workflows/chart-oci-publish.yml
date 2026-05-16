@@ -11,6 +11,7 @@ on:
 concurrency:
   group: chart-oci-publish-${{ github.ref }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   list_charts:
