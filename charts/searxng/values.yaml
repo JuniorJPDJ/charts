@@ -36,7 +36,7 @@ controllers:
         image:
           repository: docker.io/searxng/searxng
           pullPolicy: Always
-          tag: 2026.5.15-afafca93f@sha256:201c62d470abf1b3ccad42562b6a8310267fbb022962d8bd410c4b011ec4516e
+          tag: 2026.5.21-d8f74af3d@sha256:00365f315154182eeb6148c1736339817fb942b6412c4ff4e29c669b0efd8b0e
         securityContext:
           capabilities:
             drop:
