@@ -8,7 +8,7 @@
 image:
   repository: ghcr.io/justarchinet/archisteamfarm
   pullPolicy: Always
-  tag: "6.3.8.4@sha256:eee11ea9189bf33904aad47d9e9a10c95a4557e8c11d681e79d9a7d8980ca67d"
+  tag: "6.3.9.3@sha256:3545a19757a66c749a93cb4ea431aed85fe51979776a4a8378acf35126aae83f"
 
 configs:
 # This allows injecting json configs from yaml values
