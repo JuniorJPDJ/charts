@@ -2,7 +2,7 @@ apiVersion: v2
 name: searxng
 description: Free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
 type: application
-version: 0.1.27
+version: 0.1.28
 # renovate: image=docker.io/searxng/searxng
 appVersion: 2026.8.14-094c33d40
 kubeVersion: ">=1.22.0-0"
@@ -14,7 +14,7 @@ keywords:
 dependencies:
   - name: common
     repository: https://bjw-s-labs.github.io/helm-charts
-    version: 5.0.1
+    version: 5.1.0
   - name: valkey
     repository: https://valkey.io/valkey-helm/
     version: 0.11.0
