@@ -68,6 +68,56 @@
         ],
         "executionMode": "branch"
       }
+    },
+    {
+      "description": "ArchiSteamFarm versions come from GitHub releases (ghcr.io tags don't carry the GitHub pre-release flag, which made :ignoreUnstable useless here)",
+      "matchManagers": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/justarchinet/archisteamfarm"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Re-pin the image digest after Renovate drops it from the archisteamfarm image tag, then bump the chart version",
+      "matchFileNames": [
+        "charts/archisteamfarm/values.yaml"
+      ],
+      "postUpgradeTasks": {
+        "commands": [
+          "node scripts/sync-image-digest.js '{{{parentDir}}}'",
+          "bash scripts/bump-chart-version.sh '{{{parentDir}}}'"
+        ],
+        "fileFilters": [
+          "charts/*/*"
+        ],
+        "executionMode": "branch"
+      }
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update appVersion in Chart.yaml from a dependency selected via a custom datasource",
+      "managerFilePatterns": [
+        "/(^|/)Chart\\.yaml$/"
+      ],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>[a-zA-Z0-9._-]+?)\\s+depName=(?<depName>\\S+)(?:\\s+versioning=(?<versioning>\\S+))?\\s*\\n\\s*appVersion:\\s*[\"']?(?<currentValue>[\\w+.-]+)"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}loose{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "description": "Update the image tag in values.yaml from a dependency selected via a custom datasource",
+      "managerFilePatterns": [
+        "/(^|/)values\\.yaml$/"
+      ],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>[a-zA-Z0-9._-]+?)\\s+depName=(?<depName>\\S+)(?:\\s+versioning=(?<versioning>\\S+))?\\s*\\n\\s*tag:\\s*[\"']?(?<currentValue>[\\w+.-]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?[\"']?"
+      ],
+      "autoReplaceStringTemplate": "# renovate: datasource={{{datasource}}} depName={{{depName}}}{{#if versioning}} versioning={{{versioning}}}{{/if}}\n  tag: \"{{{newVersion}}}\""
     }
   ]
 }
