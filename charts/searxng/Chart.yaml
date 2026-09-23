@@ -2,7 +2,7 @@ apiVersion: v2
 name: searxng
 description: Free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
 type: application
-version: 0.1.35
+version: 0.1.36
 # renovate: image=docker.io/searxng/searxng
 appVersion: 2026.9.18-fc028154a
 kubeVersion: ">=1.22.0-0"
@@ -20,9 +20,9 @@ dependencies:
     version: 0.12.0
     condition: valkey.enabled
 sources:
-  - https://github.com/searxng/searxng
-  - https://github.com/searxng/searxng-docker
   - https://github.com/JuniorJPDJ/charts/tree/master/charts/searxng
+  - https://github.com/searxng/searxng-docker
+  - https://github.com/searxng/searxng
 annotations:
   artifacthub.io/links: |-
     - name: App Webpage

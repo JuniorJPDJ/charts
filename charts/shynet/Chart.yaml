@@ -2,7 +2,7 @@ apiVersion: v2
 name: shynet
 description: Modern, privacy-friendly, and detailed web analytics that works without cookies or JS
 type: application
-version: 0.1.31
+version: 0.1.32
 # renovate: image=milesmcc/shynet
 appVersion: 0.13.1
 kubeVersion: ">=1.22.0-0"
@@ -18,8 +18,8 @@ dependencies:
     repository: https://bjw-s-labs.github.io/helm-charts
     version: 5.2.1
 sources:
-  - https://github.com/milesmcc/shynet
   - https://github.com/JuniorJPDJ/charts/tree/master/charts/shynet
+  - https://github.com/milesmcc/shynet
 annotations:
   artifacthub.io/links: |-
     - name: App Source

@@ -6,7 +6,6 @@ on:
       - 'master'
   pull_request:
     types: [opened, reopened, synchronize]
-  workflow_dispatch:
 
 concurrency:
   group: chart-oci-publish-${{ github.ref }}
@@ -29,14 +28,14 @@ jobs:
         id: set-matrix
         working-directory: charts
         run: |
-          GIT_DIFF_ENABLED=0
+          GIT_DIFF_ENABLED=1
+          VERSION_GATE=1
 
           if [ '${{ github.event_name }}' = 'push' ] ; then
-            GIT_DIFF_ENABLED=1
             GIT_DIFF_BASE='${{ github.event.before }}'
             GIT_DIFF_HEAD='${{ github.event.after }}'
           elif [ '${{ github.event_name }}' = 'pull_request' ] ; then
-            GIT_DIFF_ENABLED=1
+            VERSION_GATE=0
             GIT_DIFF_BASE='${{ github.event.pull_request.base.sha }}'
             GIT_DIFF_HEAD='${{ github.event.pull_request.head.sha }}'
           fi
@@ -52,6 +51,11 @@ jobs:
                   continue
 
                 if [ -f "$d/Chart.yaml" ] ; then
+                  if [ $VERSION_GATE = 1 -a $GIT_DIFF_ENABLED = 1 ] ; then
+                    base_ver="$(git show "$GIT_DIFF_BASE:charts/$d/Chart.yaml" 2>/dev/null | grep '^version:' | awk '{print $2}')"
+                    head_ver="$(git show "$GIT_DIFF_HEAD:charts/$d/Chart.yaml" 2>/dev/null | grep '^version:' | awk '{print $2}')"
+                    [ "$base_ver" = "$head_ver" ] && continue
+                  fi
                   echo "- chart: \"$d\""
                   NO_CHARTS=0
                 fi
@@ -110,6 +114,33 @@ jobs:
           name: chart-${{ matrix.chart }}
           path: ${{ runner.temp }}/${{ matrix.chart }}-*.tgz
           retention-days: 1
+
+  release:
+    name: "Release chart: ${{ matrix.chart }}"
+    needs: [list_charts, build]
+    if: needs.list_charts.outputs.matrix != '[]' && github.event_name != 'pull_request'
+    permissions:
+      contents: write
+    concurrency:
+      group: chart-oci-publish-release-${{ matrix.chart }}
+      cancel-in-progress: false
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.list_charts.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: '0'
+          fetch-tags: true
+
+      - name: Create release for the published version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/create_release.py '${{ matrix.chart }}'
 
   generate-index:
     name: Generate Helm Repository index

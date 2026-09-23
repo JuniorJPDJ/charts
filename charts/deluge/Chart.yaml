@@ -2,7 +2,7 @@ apiVersion: v2
 name: deluge
 description: Deluge is a lightweight, Free Software, cross-platform BitTorrent client.
 type: application
-version: 0.1.32
+version: 0.1.33
 # renovate: image=divadsn/deluge-ltconfig
 appVersion: 2.1.1
 kubeVersion: ">=1.22.0-0"
@@ -19,9 +19,9 @@ dependencies:
     repository: https://bjw-s-labs.github.io/helm-charts
     version: 5.2.1
 sources:
-  - https://git.deluge-torrent.org/deluge
-  - https://github.com/divadsn/docker-deluge-ltconfig
   - https://github.com/JuniorJPDJ/charts/tree/master/charts/deluge
+  - https://github.com/divadsn/docker-deluge-ltconfig
+  - https://git.deluge-torrent.org/deluge
 annotations:
   artifacthub.io/links: |-
     - name: App Webpage
