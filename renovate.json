@@ -94,6 +94,13 @@
         ],
         "executionMode": "branch"
       }
+    },
+    {
+      "description": "changelogs: mumble-server",
+      "matchDepNames": [
+        "ghcr.io/mumble-voip/mumble-server"
+      ],
+      "sourceUrl": "https://github.com/mumble-voip/mumble"
     }
   ],
   "customManagers": [
