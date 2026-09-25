@@ -55,19 +55,32 @@
       "pinDigests": false
     },
     {
-      "description": "Bump helm chart versions by a patch. This can be removed when https://github.com/renovatebot/renovate/issues/8231 is implemented and enabled.",
+      "description": "Bump chart version on any update inside a chart. Pre-1.0 charts use the 0.x convention (major dep update -> minor chart bump, everything else -> patch); stable charts (>=1.0.0) mirror the update level (major/minor, else patch).",
       "matchFileNames": [
         "charts/*/*"
       ],
-      "postUpgradeTasks": {
-        "commands": [
-          "bash scripts/bump-chart-version.sh '{{{parentDir}}}'"
-        ],
-        "fileFilters": [
-          "charts/*/*"
-        ],
-        "executionMode": "branch"
-      }
+      "bumpVersions": [
+        {
+          "name": "bump-chart-version-pre1.0",
+          "filePatterns": [
+            "{{packageFileDir}}/Chart.yaml"
+          ],
+          "matchStrings": [
+            "\\nversion:\\s*[\"']?(?<version>0\\.\\d+\\.\\d+)[\"']?"
+          ],
+          "bumpType": "{{#if isMajor}}minor{{else}}patch{{/if}}"
+        },
+        {
+          "name": "bump-chart-version-stable",
+          "filePatterns": [
+            "{{packageFileDir}}/Chart.yaml"
+          ],
+          "matchStrings": [
+            "\\nversion:\\s*[\"']?(?<version>[1-9]\\d*\\.\\d+\\.\\d+)[\"']?"
+          ],
+          "bumpType": "{{#if isMajor}}major{{else}}{{#if isMinor}}minor{{else}}patch{{/if}}{{/if}}"
+        }
+      ]
     },
     {
       "description": "ArchiSteamFarm versions come from GitHub releases (ghcr.io tags don't carry the GitHub pre-release flag, which made :ignoreUnstable useless here)",
@@ -80,14 +93,13 @@
       "enabled": false
     },
     {
-      "description": "Re-pin the image digest after Renovate drops it from the archisteamfarm image tag, then bump the chart version",
+      "description": "Re-pin the image digest after Renovate drops it from the archisteamfarm image tag",
       "matchFileNames": [
         "charts/archisteamfarm/values.yaml"
       ],
       "postUpgradeTasks": {
         "commands": [
-          "node scripts/sync-image-digest.js '{{{parentDir}}}'",
-          "bash scripts/bump-chart-version.sh '{{{parentDir}}}'"
+          "node scripts/sync-image-digest.js '{{{parentDir}}}'"
         ],
         "fileFilters": [
           "charts/*/*"
