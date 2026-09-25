@@ -1,0 +1,39 @@
+apiVersion: v2
+name: pretalx
+description: "Conference planning tool: CfP, scheduling, speaker management"
+type: application
+version: 0.1.0
+appVersion: "v2024.3.1"
+kubeVersion: ">=1.22.0-0"
+keywords:
+  - events
+  - conference
+  - scheduling
+  - call-for-paper
+  - call-for-papers
+  - cfp
+  - conference-management
+dependencies:
+  - name: common
+    repository: https://bjw-s.github.io/helm-charts
+    version: 3.7.1
+  - name: valkey
+    repository: https://charts.bitnami.com/bitnami
+    version: 2.4.1
+    condition: valkey.enabled
+  - name: postgresql
+    repository: https://charts.bitnami.com/bitnami
+    version: 16.4.14
+    condition: postgresql.enabled
+sources:
+  - https://github.com/JuniorJPDJ/charts/tree/master/charts/pretalx
+  - https://github.com/pretalx/pretalx-docker
+  - https://github.com/pretalx/pretalx
+annotations:
+  artifacthub.io/links: |-
+    - name: Chart Source
+      url: https://github.com/JuniorJPDJ/charts/tree/master/charts/pretalx
+    - name: Dockerfile Source
+      url: https://github.com/pretalx/pretalx-docker
+    - name: App Source
+      url: https://github.com/pretalx/pretalx
