@@ -11,6 +11,7 @@
     ":separateMultipleMajorReleases",
     ":updateNotScheduled"
   ],
+  "timezone": "Europe/Warsaw",
   "packageRules": [
     {
       "description": "Treat every chart as separate group with separate scope and branch prefix",
@@ -32,7 +33,7 @@
       "versioning": "loose"
     },
     {
-      "description": "Use loose versioning for searxng date-based tags with git hash suffix and update only on Friday",
+      "description": "searxng: loose versioning for date-based tags with git hash suffix, update only on Tuesday and Friday",
       "matchDatasources": [
         "docker"
       ],
@@ -41,7 +42,7 @@
       ],
       "versioning": "loose",
       "schedule": [
-        "* 5-9 * * 5"
+        "* 5-8 * * 2,5"
       ]
     },
     {
@@ -83,7 +84,7 @@
       ]
     },
     {
-      "description": "ArchiSteamFarm versions come from GitHub releases (ghcr.io tags don't carry the GitHub pre-release flag, which made :ignoreUnstable useless here)",
+      "description": "archisteamfarm: versions come from GitHub releases (ghcr.io tags don't carry the GitHub pre-release flag, which made :ignoreUnstable useless here)",
       "matchManagers": [
         "docker"
       ],
@@ -93,7 +94,7 @@
       "enabled": false
     },
     {
-      "description": "Re-pin the image digest after Renovate drops it from the archisteamfarm image tag",
+      "description": "archisteamfarm: Re-pin the image digest after Renovate drops it from the archisteamfarm image tag",
       "matchFileNames": [
         "charts/archisteamfarm/values.yaml"
       ],
