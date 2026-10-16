@@ -104,7 +104,7 @@
           "node scripts/sync-image-digest.js '{{{parentDir}}}'"
         ],
         "fileFilters": [
-          "charts/*/*"
+          "charts/archisteamfarm/values.yaml"
         ],
         "executionMode": "branch"
       }
