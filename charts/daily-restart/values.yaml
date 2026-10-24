@@ -34,7 +34,7 @@ controllers:
           runAsGroup: 1000
         image:
           repository: ghcr.io/juniorjpdj/containers/openssl-kubectl
-          tag: 1.36.1-r6@sha256:ea0d3a6e92fa9bd72243d9595a133dec1235dd5a66dedeabf0af8a2626ec8e92
+          tag: 1.36.1-r7@sha256:2aa6bac231e14a6358e2261b767af03743d003bb717d751f04ee3756b2c60bf9
           pullPolicy: Always
 
 serviceAccount:
