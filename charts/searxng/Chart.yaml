@@ -2,7 +2,7 @@ apiVersion: v2
 name: searxng
 description: Free internet metasearch engine which aggregates results from various search services and databases. Users are neither tracked nor profiled.
 type: application
-version: 0.1.47
+version: 0.1.48
 # renovate: image=docker.io/searxng/searxng
 appVersion: 2026.10.27-ef7bae9dd
 kubeVersion: ">=1.22.0-0"
@@ -17,7 +17,7 @@ dependencies:
     version: 5.3.0
   - name: valkey
     repository: https://valkey.io/valkey-helm/
-    version: 0.12.0
+    version: 0.12.1
     condition: valkey.enabled
 sources:
   - https://github.com/JuniorJPDJ/charts/tree/master/charts/searxng
