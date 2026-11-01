@@ -9,7 +9,7 @@ image:
   repository: ghcr.io/justarchinet/archisteamfarm
   pullPolicy: Always
   # renovate: datasource=github-releases depName=JustArchiNET/ArchiSteamFarm versioning=loose
-  tag: "6.3.10.6@sha256:200d6792d5226bb6c1495fd3ba65a8898d88b60707efb761f2d79916910c708c"
+  tag: "6.3.11.7@sha256:884137cd5dd93c42c789008ce12016107073b1c7bfa79c59cd675b583ae30975"
 
 configs:
 # This allows injecting json configs from yaml values
