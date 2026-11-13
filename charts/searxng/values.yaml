@@ -84,5 +84,5 @@ persistence:
 
 valkey:
   enabled: true
-  dataStorage:
+  persistence:
     enabled: false
